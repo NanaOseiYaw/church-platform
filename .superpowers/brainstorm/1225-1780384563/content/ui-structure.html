@@ -1,0 +1,144 @@
+<h2>Design Section 2 — UI Structure</h2>
+<p class="subtitle">Pages, components, and navigation for Phase 1. Review the full layout and let me know if anything needs adjusting.</p>
+
+<div class="section">
+  <h3>Navigation & Routing</h3>
+  <div style="background:#0f172a;border-radius:12px;padding:20px;font-family:monospace;font-size:12px;color:#94a3b8;line-height:1.8">
+    <div style="color:#7c3aed;font-weight:700">Volunteer Scheduling</div>
+    <div style="padding-left:16px">
+      <div><span style="color:#e2e8f0">GET</span> /dashboard/scheduling              <span style="color:#64748b">→ Dashboard (overview)</span></div>
+      <div style="color:#7c3aed;margin-top:4px">Service Plans</div>
+      <div style="padding-left:16px">
+        <div><span style="color:#e2e8f0">GET</span> /dashboard/scheduling/plans           <span style="color:#64748b">→ Plans index (list)</span></div>
+        <div><span style="color:#e2e8f0">GET</span> /dashboard/scheduling/plans/create     <span style="color:#64748b">→ Create plan form</span></div>
+        <div><span style="color:#e2e8f0">GET</span> /dashboard/scheduling/plans/{plan}      <span style="color:#64748b">→ <b style="color:#f59e0b">Plan detail — Sidebar+Panel layout</b></span></div>
+        <div><span style="color:#e2e8f0">PATCH</span> /dashboard/scheduling/plans/{plan}/publish <span style="color:#64748b">→ Publish action</span></div>
+      </div>
+      <div style="color:#7c3aed;margin-top:4px">Positions (library)</div>
+      <div style="padding-left:16px">
+        <div><span style="color:#e2e8f0">GET</span> /dashboard/scheduling/positions      <span style="color:#64748b">→ Position library manager</span></div>
+        <div><span style="color:#e2e8f0">POST</span> /dashboard/scheduling/positions      <span style="color:#64748b">→ Create position</span></div>
+        <div><span style="color:#e2e8f0">PUT</span> /dashboard/scheduling/positions/{p}  <span style="color:#64748b">→ Edit position</span></div>
+      </div>
+      <div style="color:#7c3aed;margin-top:4px">Assignments (API actions — no full page)</div>
+      <div style="padding-left:16px">
+        <div><span style="color:#e2e8f0">POST</span>   /dashboard/scheduling/assignments          <span style="color:#64748b">→ Assign volunteer to slot</span></div>
+        <div><span style="color:#e2e8f0">DELETE</span> /dashboard/scheduling/assignments/{a}      <span style="color:#64748b">→ Remove assignment</span></div>
+        <div><span style="color:#e2e8f0">PATCH</span>  /dashboard/scheduling/assignments/{a}/respond <span style="color:#64748b">→ confirm / decline</span></div>
+      </div>
+      <div style="color:#7c3aed;margin-top:4px">My Schedule (member view)</div>
+      <div style="padding-left:16px">
+        <div><span style="color:#e2e8f0">GET</span> /dashboard/scheduling/my-schedule    <span style="color:#64748b">→ Member's upcoming assignments</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Page Breakdown</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+    <!-- Schedule Dashboard -->
+    <div style="background:#1e293b;border-radius:10px;padding:16px;border-left:3px solid #7c3aed">
+      <div style="color:#e2e8f0;font-weight:600;margin-bottom:8px">📊 Schedule Dashboard</div>
+      <div style="font-size:12px;color:#94a3b8;line-height:1.8">
+        <div>• Stat strip: Upcoming / Open slots / Pending responses</div>
+        <div>• Upcoming plans cards (next 4 weeks)</div>
+        <div>• Quick action: Create Plan button</div>
+        <div>• Recent plans with status badges</div>
+      </div>
+    </div>
+
+    <!-- Plans List -->
+    <div style="background:#1e293b;border-radius:10px;padding:16px;border-left:3px solid #0891b2">
+      <div style="color:#e2e8f0;font-weight:600;margin-bottom:8px">📋 Plans List</div>
+      <div style="font-size:12px;color:#94a3b8;line-height:1.8">
+        <div>• Filter tabs: Upcoming / Past / All</div>
+        <div>• Status filter: Draft / Published / Archived</div>
+        <div>• Plan cards: title, date, dept count, fill rate</div>
+        <div>• Create Plan button (admin only)</div>
+      </div>
+    </div>
+
+    <!-- Plan Detail — THE core page -->
+    <div style="background:#1e293b;border-radius:10px;padding:16px;border-left:3px solid #f59e0b;grid-column:1/-1">
+      <div style="color:#e2e8f0;font-weight:600;margin-bottom:8px">⭐ Plan Detail — Sidebar + Panel (the core page)</div>
+      <div style="display:grid;grid-template-columns:180px 1fr;gap:16px;font-size:12px">
+        <div>
+          <div style="color:#94a3b8;font-weight:600;margin-bottom:6px">LEFT SIDEBAR</div>
+          <div style="color:#94a3b8;line-height:1.8">
+            <div>• Plan title + date + status badge</div>
+            <div>• Publish / Archive buttons</div>
+            <div>• Department list nav</div>
+            <div>  ↳ each with filled/total count</div>
+            <div>• Add Department button</div>
+          </div>
+        </div>
+        <div>
+          <div style="color:#94a3b8;font-weight:600;margin-bottom:6px">RIGHT PANEL — selected department</div>
+          <div style="color:#94a3b8;line-height:1.8">
+            <div>• Position rows with slot status dot</div>
+            <div>• Assigned volunteer avatar + name + confirmation badge</div>
+            <div>• Empty slot → "Assign" button → member picker drawer</div>
+            <div>• Add Position button (pulls from dept library)</div>
+            <div>• Remove position from plan</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid #334155;font-size:12px">
+        <span style="color:#94a3b8">Assignment Drawer (slide-in panel):</span>
+        <span style="color:#64748b"> search members of that department → click to assign → drawer closes → slot shows assigned member</span>
+      </div>
+    </div>
+
+    <!-- Position Library -->
+    <div style="background:#1e293b;border-radius:10px;padding:16px;border-left:3px solid #059669">
+      <div style="color:#e2e8f0;font-weight:600;margin-bottom:8px">🔧 Position Library</div>
+      <div style="font-size:12px;color:#94a3b8;line-height:1.8">
+        <div>• Grouped by department</div>
+        <div>• Create / edit / deactivate positions</div>
+        <div>• Admin only (church_admin / super_admin)</div>
+      </div>
+    </div>
+
+    <!-- My Schedule -->
+    <div style="background:#1e293b;border-radius:10px;padding:16px;border-left:3px solid #e11d48">
+      <div style="color:#e2e8f0;font-weight:600;margin-bottom:8px">👤 My Schedule</div>
+      <div style="font-size:12px;color:#94a3b8;line-height:1.8">
+        <div>• Member's upcoming assignments (upcoming first)</div>
+        <div>• Each card: plan title, date, position, dept</div>
+        <div>• Confirm / Decline buttons inline</div>
+        <div>• Status badge: Pending / Confirmed / Declined</div>
+        <div>• Accessible to every authenticated member</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <h3>Vue Component Tree</h3>
+  <div style="background:#0f172a;border-radius:12px;padding:16px;font-family:monospace;font-size:11px;color:#94a3b8;line-height:1.9">
+    <div><span style="color:#7c3aed">Pages/Dashboard/Scheduling/</span></div>
+    <div style="padding-left:16px">
+      <div><span style="color:#e2e8f0">Dashboard.vue</span>  <span style="color:#475569">← stats strip + upcoming plan cards</span></div>
+      <div><span style="color:#e2e8f0">Plans/Index.vue</span>  <span style="color:#475569">← plan list with filters</span></div>
+      <div><span style="color:#e2e8f0">Plans/Create.vue</span>  <span style="color:#475569">← create form (title, date, time, location)</span></div>
+      <div><span style="color:#e2e8f0">Plans/Show.vue</span>  <span style="color:#475569">← sidebar + panel layout ⭐</span></div>
+      <div><span style="color:#e2e8f0">Positions/Index.vue</span>  <span style="color:#475569">← position library manager</span></div>
+      <div><span style="color:#e2e8f0">MySchedule.vue</span>  <span style="color:#475569">← member's own assignments</span></div>
+    </div>
+    <div style="margin-top:8px"><span style="color:#7c3aed">Components/Scheduling/</span></div>
+    <div style="padding-left:16px">
+      <div><span style="color:#e2e8f0">PlanCard.vue</span>  <span style="color:#475569">← plan summary card (used in Dashboard + Index)</span></div>
+      <div><span style="color:#e2e8f0">DeptSidebar.vue</span>  <span style="color:#475569">← left nav of dept list on Show.vue</span></div>
+      <div><span style="color:#e2e8f0">PositionPanel.vue</span>  <span style="color:#475569">← right panel of positions + slots on Show.vue</span></div>
+      <div><span style="color:#e2e8f0">AssignDrawer.vue</span>  <span style="color:#475569">← slide-in member picker for assigning volunteers</span></div>
+      <div><span style="color:#e2e8f0">AssignmentCard.vue</span>  <span style="color:#475569">← assignment row with avatar + confirm badge</span></div>
+      <div><span style="color:#e2e8f0">MyAssignmentCard.vue</span>  <span style="color:#475569">← card on My Schedule with confirm/decline buttons</span></div>
+      <div><span style="color:#e2e8f0">StatusBadge.vue</span>  <span style="color:#475569">← reusable badge: draft/published/archived/pending/confirmed/declined</span></div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="text-align:center;margin-top:8px">Let me know in the terminal if this UI structure looks right, or if you want to change anything.</p>

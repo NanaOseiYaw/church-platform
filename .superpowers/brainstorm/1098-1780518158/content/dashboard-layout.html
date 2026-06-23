@@ -1,0 +1,96 @@
+<h2>Communication Dashboard Layout</h2>
+<p class="subtitle">What should leadership see when they first open Communication Center?</p>
+
+<div class="options">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Stats + Activity Feed</h3>
+      <p>Top row of key numbers, then a scrollable feed of recent broadcasts below. Clean, Stripe-style.</p>
+      <div style="margin-top:10px;background:#f8f9fa;border-radius:8px;padding:10px;font-size:11px;">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;">
+          <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:8px;text-align:center;">
+            <div style="font-size:18px;font-weight:700;color:#111;">24</div>
+            <div style="color:#94a3b8;font-size:10px;">Sent this month</div>
+          </div>
+          <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:8px;text-align:center;">
+            <div style="font-size:18px;font-weight:700;color:#16a34a;">98%</div>
+            <div style="color:#94a3b8;font-size:10px;">Delivery rate</div>
+          </div>
+          <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:8px;text-align:center;">
+            <div style="font-size:18px;font-weight:700;color:#6366f1;">3</div>
+            <div style="color:#94a3b8;font-size:10px;">Scheduled</div>
+          </div>
+        </div>
+        <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:8px;">
+          <div style="font-size:10px;font-weight:600;color:#374151;margin-bottom:6px;">Recent Broadcasts</div>
+          <div style="border-bottom:1px solid #f1f5f9;padding:4px 0;display:flex;justify-content:space-between;"><span>Sunday Service Reminder</span><span style="color:#16a34a;font-size:10px;">Sent · 142</span></div>
+          <div style="border-bottom:1px solid #f1f5f9;padding:4px 0;display:flex;justify-content:space-between;"><span>Worship Team Update</span><span style="color:#6366f1;font-size:10px;">Scheduled</span></div>
+          <div style="padding:4px 0;display:flex;justify-content:space-between;"><span>Event Reminder</span><span style="color:#64748b;font-size:10px;">Draft</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Quick Actions + Overview</h3>
+      <p>Prominent quick-action buttons at the top, stats and recent activity below. Action-oriented — church admins jump straight to sending.</p>
+      <div style="margin-top:10px;background:#f8f9fa;border-radius:8px;padding:10px;font-size:11px;">
+        <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:10px;margin-bottom:8px;">
+          <div style="font-size:10px;font-weight:600;color:#374151;margin-bottom:6px;">Quick Actions</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <div style="background:#6366f1;color:white;border-radius:6px;padding:5px 10px;font-size:10px;font-weight:600;">+ New Broadcast</div>
+            <div style="background:#f1f5f9;color:#374151;border-radius:6px;padding:5px 10px;font-size:10px;">Dept Message</div>
+            <div style="background:#f1f5f9;color:#374151;border-radius:6px;padding:5px 10px;font-size:10px;">Event Attendees</div>
+            <div style="background:#f1f5f9;color:#374151;border-radius:6px;padding:5px 10px;font-size:10px;">Volunteers</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:8px;">
+            <div style="font-size:10px;font-weight:600;color:#374151;margin-bottom:4px;">This Month</div>
+            <div style="font-size:16px;font-weight:700;color:#111;">24 sent</div>
+            <div style="color:#16a34a;font-size:10px;">↑ 98% delivered</div>
+          </div>
+          <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:8px;">
+            <div style="font-size:10px;font-weight:600;color:#374151;margin-bottom:4px;">Upcoming</div>
+            <div style="font-size:11px;color:#374151;margin-bottom:2px;">Worship Team · Tomorrow 9am</div>
+            <div style="font-size:11px;color:#94a3b8;">Event Reminder · Fri</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Split: Stats left, Recent right</h3>
+      <p>Two-column layout. Left column: stats + quick actions stacked. Right column: scrollable activity feed. More information density.</p>
+      <div style="margin-top:10px;background:#f8f9fa;border-radius:8px;padding:10px;font-size:11px;">
+        <div style="display:flex;gap:8px;">
+          <div style="width:40%;display:flex;flex-direction:column;gap:6px;">
+            <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:8px;text-align:center;">
+              <div style="font-size:20px;font-weight:700;color:#111;">24</div>
+              <div style="color:#94a3b8;font-size:10px;">Sent this month</div>
+            </div>
+            <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:8px;text-align:center;">
+              <div style="font-size:20px;font-weight:700;color:#16a34a;">98%</div>
+              <div style="color:#94a3b8;font-size:10px;">Delivery rate</div>
+            </div>
+            <div style="background:#6366f1;color:white;border-radius:6px;padding:6px;text-align:center;font-size:10px;font-weight:600;">+ New Broadcast</div>
+          </div>
+          <div style="flex:1;background:white;border:1px solid #e2e8f0;border-radius:6px;padding:8px;">
+            <div style="font-size:10px;font-weight:600;color:#374151;margin-bottom:6px;">Recent</div>
+            <div style="border-bottom:1px solid #f1f5f9;padding:4px 0;"><div style="font-size:10px;font-weight:500;">Sunday Service</div><div style="color:#16a34a;font-size:9px;">Sent · 142 people</div></div>
+            <div style="border-bottom:1px solid #f1f5f9;padding:4px 0;"><div style="font-size:10px;font-weight:500;">Worship Update</div><div style="color:#6366f1;font-size:9px;">Scheduled</div></div>
+            <div style="padding:4px 0;"><div style="font-size:10px;font-weight:500;">Event Reminder</div><div style="color:#94a3b8;font-size:9px;">Draft</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

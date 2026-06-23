@@ -1,0 +1,95 @@
+<h2>Design Section 3: Logo upload drag states</h2>
+<p class="subtitle">Three states the upload zone needs to handle. Does this feel right?</p>
+
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px;">
+
+  <!-- State 1: Idle (current) -->
+  <div>
+    <p class="label" style="margin-bottom:8px;">1 — Idle (unchanged)</p>
+    <div style="
+      border: 2px dashed #e5e7eb;
+      border-radius: 16px;
+      height: 112px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:#fff;
+      transition: all 0.2s;
+    ">
+      <div style="width:40px;height:40px;background:#f3f4f6;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:18px;">⬆</span>
+      </div>
+      <div style="text-align:center;">
+        <p style="font-size:13px;font-weight:500;color:#4b5563;margin:0;">Upload logo</p>
+        <p style="font-size:11px;color:#9ca3af;margin:0;">PNG, JPG, WebP up to 2 MB</p>
+      </div>
+    </div>
+    <p style="font-size:11px;color:#6b7280;margin-top:6px;">Click to browse. Drag a file over the zone to activate drag state.</p>
+  </div>
+
+  <!-- State 2: Drag-over (NEW) -->
+  <div>
+    <p class="label" style="margin-bottom:8px;">2 — Drag-over (new)</p>
+    <div style="
+      border: 2px dashed #818cf8;
+      border-radius: 16px;
+      height: 112px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:#eef2ff;
+      transition: all 0.2s;
+    ">
+      <div style="width:40px;height:40px;background:#c7d2fe;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:18px;animation:bounce 0.5s infinite alternate;">⬇</span>
+      </div>
+      <div style="text-align:center;">
+        <p style="font-size:13px;font-weight:600;color:#4f46e5;margin:0;">Drop to upload</p>
+        <p style="font-size:11px;color:#818cf8;margin:0;">PNG, JPG, WebP up to 2 MB</p>
+      </div>
+    </div>
+    <p style="font-size:11px;color:#6b7280;margin-top:6px;">Brand color border + tinted background signals "drop here".</p>
+  </div>
+
+  <!-- State 3: Invalid file type (NEW) -->
+  <div>
+    <p class="label" style="margin-bottom:8px;">3 — Invalid drop (new)</p>
+    <div style="
+      border: 2px dashed #fca5a5;
+      border-radius: 16px;
+      height: 112px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:#fef2f2;
+    ">
+      <div style="width:40px;height:40px;background:#fee2e2;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:18px;">✕</span>
+      </div>
+      <div style="text-align:center;">
+        <p style="font-size:13px;font-weight:600;color:#dc2626;margin:0;">Not an image file</p>
+        <p style="font-size:11px;color:#f87171;margin:0;">PNG, JPG, or WebP only</p>
+      </div>
+    </div>
+    <p style="font-size:11px;color:#6b7280;margin-top:6px;">Shown for 2s then resets to idle. No file is accepted.</p>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top:20px;">
+  <h3>Implementation notes</h3>
+  <ul style="font-size:13px;color:#374151;line-height:1.8;margin-top:8px;">
+    <li><strong>dragover</strong> → set <code>isDragging = true</code>, call <code>e.preventDefault()</code></li>
+    <li><strong>dragleave</strong> → set <code>isDragging = false</code></li>
+    <li><strong>drop</strong> → check <code>file.type</code> against <code>['image/png','image/jpeg','image/webp']</code>. Valid → run existing <code>onFileChange</code> logic. Invalid → show error state for 2s then reset.</li>
+    <li>All 3 handlers attached to the existing <code>&lt;button&gt;</code> dropzone in <code>StepBranding.vue</code> — no new elements needed.</li>
+  </ul>
+</div>
+
+<p style="font-size:12px;color:#6b7280;margin-top:4px;">Let me know in the terminal if this looks good.</p>

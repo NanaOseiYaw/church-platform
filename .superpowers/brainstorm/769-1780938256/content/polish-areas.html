@@ -1,0 +1,57 @@
+<h2>Which areas should we polish?</h2>
+<p class="subtitle">I found 4 improvement areas in the current onboarding wizard. Select all that apply — we can scope from there.</p>
+
+<div class="options" data-multiselect>
+
+  <div class="option" data-choice="form-ux" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Form UX gaps</h3>
+      <p>Password confirmation field missing (users can mistype and get locked out). Continue button is silently disabled with no hint about what's missing. Country is a free-text input — gets messy. No autofocus per step.</p>
+      <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+        <span style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:4px;padding:2px 8px;font-size:12px">⚠ Password mismatch risk</span>
+        <span style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:4px;padding:2px 8px;font-size:12px">⚠ Silent validation</span>
+        <span style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:4px;padding:2px 8px;font-size:12px">⚠ Country free-text</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="server-errors" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Server error handling</h3>
+      <p>When the final submission fails validation on step 1 or 2 fields (e.g. duplicate church name), the user stays on step 3 seeing "Something went wrong." They have no idea which step has the problem or how to fix it.</p>
+      <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+        <span style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:4px;padding:2px 8px;font-size:12px">🔴 High confusion risk</span>
+        <span style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:4px;padding:2px 8px;font-size:12px">⚠ User stuck on wrong step</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="logo-upload" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Logo upload (drag & drop)</h3>
+      <p>The logo dropzone only responds to clicks — drag-and-drop is expected by users. Also no file-type validation feedback before upload (user drags a PDF and nothing happens).</p>
+      <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+        <span style="background:#ede9fe;color:#5b21b6;border:1px solid #c4b5fd;border-radius:4px;padding:2px 8px;font-size:12px">✨ UX expectation</span>
+        <span style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:4px;padding:2px 8px;font-size:12px">⚠ No drag feedback</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="welcome" onclick="toggleSelect(this)">
+    <div class="letter">D</div>
+    <div class="content">
+      <h3>Welcome screen + layout branding</h3>
+      <p>The left panel still shows "CP / Church Platform" hardcoded. The browser tab says "Welcome to Church Platform". The welcome screen quick-start links use hardcoded /dashboard/* paths (not Ziggy routes).</p>
+      <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+        <span style="background:#dcfce7;color:#166534;border:1px solid #86efac;border-radius:4px;padding:2px 8px;font-size:12px">✅ Low effort</span>
+        <span style="background:#dbeafe;color:#1e40af;border:1px solid #93c5fd;border-radius:4px;padding:2px 8px;font-size:12px">🎨 De-branding</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p style="margin-top:16px;font-size:13px;color:#6b7280;">Select all that matter — or type in the terminal if you have a different focus in mind.</p>

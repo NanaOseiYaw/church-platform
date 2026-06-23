@@ -1,0 +1,118 @@
+<h2>Member profile page layout</h2>
+<p class="subtitle">The current Show page has a simple sidebar + departments panel. How should we organise the expanded CRM view?</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="tabbed" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#f8fafc;border-radius:8px;">
+      <div style="display:flex;gap:8px;align-items:flex-start;">
+        <!-- Sidebar -->
+        <div style="width:140px;flex-shrink:0;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:10px;font-size:11px;color:#374151;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#6366f1;margin:0 auto 6px;"></div>
+          <div style="text-align:center;font-weight:600;margin-bottom:2px;">John Doe</div>
+          <div style="text-align:center;background:#ede9fe;color:#7c3aed;border-radius:99px;padding:2px 6px;font-size:9px;margin-bottom:8px;">coordinator</div>
+          <div style="color:#9ca3af;font-size:9px;margin-bottom:2px;">📧 john@church.org</div>
+          <div style="color:#9ca3af;font-size:9px;">📅 Joined 12 Jan 2024</div>
+          <div style="border-top:1px solid #f3f4f6;margin-top:8px;padding-top:8px;">
+            <div style="font-size:9px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Profile</div>
+            <div style="font-size:9px;color:#6b7280;margin-bottom:1px;">🎂 DOB: 5 Mar 1990</div>
+            <div style="font-size:9px;color:#6b7280;margin-bottom:1px;">💍 Married</div>
+            <div style="font-size:9px;color:#6b7280;">🙏 Baptised: Jun 2015</div>
+          </div>
+        </div>
+        <!-- Main tabbed area -->
+        <div style="flex:1;background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+          <div style="display:flex;gap:0;border-bottom:1px solid #e5e7eb;">
+            <div style="padding:7px 12px;font-size:10px;font-weight:600;color:#4f46e5;border-bottom:2px solid #4f46e5;">Departments</div>
+            <div style="padding:7px 12px;font-size:10px;color:#9ca3af;">Attendance</div>
+            <div style="padding:7px 12px;font-size:10px;color:#9ca3af;">Tasks</div>
+            <div style="padding:7px 12px;font-size:10px;color:#9ca3af;">Timeline</div>
+          </div>
+          <div style="padding:10px;">
+            <div style="background:#f9fafb;border-radius:6px;padding:8px;font-size:10px;color:#374151;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+              <div style="width:24px;height:24px;border-radius:6px;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;">🎵</div>
+              <div><div style="font-weight:600;">Worship Team</div><div style="color:#9ca3af;font-size:9px;">member · joined Mar 2023</div></div>
+            </div>
+            <div style="background:#f9fafb;border-radius:6px;padding:8px;font-size:10px;color:#374151;display:flex;align-items:center;gap:6px;">
+              <div style="width:24px;height:24px;border-radius:6px;background:#10b981;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;">🤝</div>
+              <div><div style="font-weight:600;">Outreach</div><div style="color:#9ca3af;font-size:9px;">coordinator · joined Jan 2024</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Sidebar + Tabs <span style="font-size:11px;background:#dcfce7;color:#16a34a;padding:2px 7px;border-radius:99px;margin-left:6px;font-weight:500;">Recommended</span></h3>
+      <p>CRM fields sit permanently in the sidebar alongside the profile card. Tabs handle the relational data — Departments, Attendance, Tasks, Timeline. Always-visible profile data, no clicking to find basic info.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="full-tabs" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#f8fafc;border-radius:8px;">
+      <!-- Header hero -->
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:#6366f1;flex-shrink:0;"></div>
+        <div style="flex:1;">
+          <div style="font-size:12px;font-weight:600;color:#111827;">John Doe</div>
+          <div style="font-size:10px;color:#9ca3af;">coordinator &nbsp;·&nbsp; 2 departments &nbsp;·&nbsp; Joined Jan 2024</div>
+        </div>
+        <div style="font-size:10px;padding:4px 10px;background:#f3f4f6;border-radius:6px;color:#374151;cursor:pointer;">Edit profile</div>
+      </div>
+      <!-- Full tabs -->
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+        <div style="display:flex;border-bottom:1px solid #e5e7eb;background:#fafafa;">
+          <div style="padding:8px 12px;font-size:10px;font-weight:600;color:#4f46e5;border-bottom:2px solid #4f46e5;">Overview</div>
+          <div style="padding:8px 12px;font-size:10px;color:#9ca3af;">Profile</div>
+          <div style="padding:8px 12px;font-size:10px;color:#9ca3af;">Departments</div>
+          <div style="padding:8px 12px;font-size:10px;color:#9ca3af;">Attendance</div>
+          <div style="padding:8px 12px;font-size:10px;color:#9ca3af;">Tasks</div>
+          <div style="padding:8px 12px;font-size:10px;color:#9ca3af;">Timeline</div>
+        </div>
+        <div style="padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <div style="background:#f9fafb;border-radius:6px;padding:8px;"><div style="font-size:9px;font-weight:600;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Attendance rate</div><div style="font-size:18px;font-weight:700;color:#111827;">87%</div></div>
+          <div style="background:#f9fafb;border-radius:6px;padding:8px;"><div style="font-size:9px;font-weight:600;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Tasks done</div><div style="font-size:18px;font-weight:700;color:#111827;">14</div></div>
+          <div style="background:#f9fafb;border-radius:6px;padding:8px;"><div style="font-size:9px;font-weight:600;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Departments</div><div style="font-size:18px;font-weight:700;color:#111827;">2</div></div>
+          <div style="background:#f9fafb;border-radius:6px;padding:8px;"><div style="font-size:9px;font-weight:600;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Years active</div><div style="font-size:18px;font-weight:700;color:#111827;">2</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Hero header + Full tabs</h3>
+      <p>Compact header strip with name/role summary. All sections including CRM profile live as equal tabs — Overview (stats), Profile, Departments, Attendance, Tasks, Timeline. More tabs to click through, but consistent layout.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="scroll" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#f8fafc;border-radius:8px;">
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;font-size:10px;">
+        <!-- Profile section -->
+        <div style="padding:10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #f3f4f6;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#6366f1;flex-shrink:0;"></div>
+          <div style="flex:1;"><div style="font-weight:600;color:#111827;">John Doe</div><div style="color:#9ca3af;font-size:9px;">coordinator</div></div>
+        </div>
+        <!-- CRM fields inline -->
+        <div style="padding:8px 10px;border-bottom:1px solid #f3f4f6;display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+          <div style="color:#6b7280;"><span style="color:#9ca3af;">DOB</span> 5 Mar 1990</div>
+          <div style="color:#6b7280;"><span style="color:#9ca3af;">Baptised</span> Jun 2015</div>
+          <div style="color:#6b7280;"><span style="color:#9ca3af;">Married</span> Yes</div>
+          <div style="color:#6b7280;"><span style="color:#9ca3af;">Joined</span> Jan 2024</div>
+        </div>
+        <!-- Departments -->
+        <div style="padding:6px 10px;font-size:9px;font-weight:600;color:#9ca3af;text-transform:uppercase;border-bottom:1px solid #f3f4f6;background:#fafafa;">Departments</div>
+        <div style="padding:8px 10px;border-bottom:1px solid #f3f4f6;color:#374151;">🎵 Worship Team &nbsp; 🤝 Outreach</div>
+        <!-- Timeline -->
+        <div style="padding:6px 10px;font-size:9px;font-weight:600;color:#9ca3af;text-transform:uppercase;border-bottom:1px solid #f3f4f6;background:#fafafa;">Activity</div>
+        <div style="padding:8px 10px;font-size:9px;color:#6b7280;">
+          <div style="margin-bottom:3px;">✓ Attended Sunday Service · 2 days ago</div>
+          <div style="margin-bottom:3px;">📋 Task completed: "Set up PA system"</div>
+          <div>👥 Joined Outreach dept · 12 Jan 2024</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Single scroll page</h3>
+      <p>Everything on one long page: profile card → CRM fields → departments → tasks → activity timeline. No tabs — just scroll. Simplest to build but can feel dense with a lot of data.</p>
+    </div>
+  </div>
+
+</div>

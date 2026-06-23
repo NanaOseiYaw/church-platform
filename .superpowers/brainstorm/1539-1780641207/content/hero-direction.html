@@ -1,0 +1,105 @@
+<h2>Hero Visual Direction</h2>
+<p class="subtitle">The homepage hero sets the tone for everything. Which direction feels right for the demo?</p>
+
+<div class="cards">
+
+  <!-- Option A: Dark Editorial -->
+  <div class="card" data-choice="dark-editorial" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0f; padding:24px; min-height:220px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;">
+          <span style="color:white;font-size:9px;font-weight:700;">GCC</span>
+        </div>
+        <span style="color:#9ca3af;font-size:11px;font-weight:600;">Grace Community Church</span>
+      </div>
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:6px;background:#1f1f2e;border:1px solid #2d2d3e;border-radius:20px;padding:5px 12px;margin-bottom:16px;">
+          <span style="width:6px;height:6px;background:#ef4444;border-radius:50%;"></span>
+          <span style="color:#9ca3af;font-size:10px;">Sundays · 8:00 AM &amp; 10:30 AM</span>
+        </div>
+        <div style="font-size:28px;font-weight:300;color:white;line-height:1.1;font-family:Georgia,serif;margin-bottom:10px;">
+          A place to<br>
+          <span style="font-style:italic;background:linear-gradient(135deg,#818cf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">belong</span> and<br>
+          grow together.
+        </div>
+        <p style="color:#6b7280;font-size:11px;line-height:1.5;margin-bottom:16px;">We are a community rooted in faith, committed to one another, and sent to serve the world.</p>
+        <div style="display:flex;gap:8px;">
+          <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:600;">I'm New Here →</div>
+          <div style="border:1px solid #2d2d3e;color:#9ca3af;padding:8px 16px;border-radius:8px;font-size:11px;">▷ Watch Live</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Dark &amp; Editorial</h3>
+      <p>Near-black background, glowing gradient headline, subtle glow orbs. Feels like Linear or Arc Browser. Dramatic, premium, modern. Strong contrast makes text impossible to miss.</p>
+    </div>
+  </div>
+
+  <!-- Option B: White Minimal -->
+  <div class="card" data-choice="white-minimal" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#ffffff; padding:24px; min-height:220px; display:flex; flex-direction:column; justify-content:space-between; border-bottom:1px solid #f0f0f0;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;">
+          <span style="color:white;font-size:9px;font-weight:700;">GCC</span>
+        </div>
+        <span style="color:#111827;font-size:11px;font-weight:600;">Grace Community Church</span>
+      </div>
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:6px;background:white;border:1px solid #e5e7eb;border-radius:20px;padding:5px 12px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+          <span style="width:6px;height:6px;background:#ef4444;border-radius:50%;"></span>
+          <span style="color:#6b7280;font-size:10px;">Sundays · 8:00 AM &amp; 10:30 AM</span>
+        </div>
+        <div style="font-size:30px;font-weight:300;color:#111827;line-height:1.1;font-family:Georgia,serif;margin-bottom:10px;">
+          A place to<br>
+          <span style="color:#6366f1;font-style:italic;">belong</span> and<br>
+          grow together.
+        </div>
+        <p style="color:#6b7280;font-size:11px;line-height:1.5;margin-bottom:16px;">We are a community rooted in faith, committed to one another, and sent to serve the world.</p>
+        <div style="display:flex;gap:8px;">
+          <div style="background:#6366f1;color:white;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:600;">I'm New Here →</div>
+          <div style="border:1px solid #e5e7eb;color:#374151;padding:8px 16px;border-radius:8px;font-size:11px;">▷ Watch Live</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — White &amp; Minimal</h3>
+      <p>Pure white, crisp black typography, brand color as a single accent. Feels like Stripe or Notion — ultra-clean, instantly legible. Confident in simplicity. Easy to read on any device.</p>
+    </div>
+  </div>
+
+  <!-- Option C: Warm Brand Immersion -->
+  <div class="card" data-choice="warm-brand" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#ede9fe 100%); padding:24px; min-height:220px; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;">
+      <div style="position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(99,102,241,0.15),transparent);border-radius:50%;"></div>
+      <div style="display:flex; align-items:center; gap:8px; position:relative;">
+        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;">
+          <span style="color:white;font-size:9px;font-weight:700;">GCC</span>
+        </div>
+        <span style="color:#1e1b4b;font-size:11px;font-weight:600;">Grace Community Church</span>
+      </div>
+      <div style="position:relative;">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:white;border:1px solid rgba(99,102,241,0.2);border-radius:20px;padding:5px 12px;margin-bottom:16px;box-shadow:0 1px 3px rgba(99,102,241,0.1);">
+          <span style="width:6px;height:6px;background:#ef4444;border-radius:50%;"></span>
+          <span style="color:#6b7280;font-size:10px;">Sundays · 8:00 AM &amp; 10:30 AM</span>
+        </div>
+        <div style="font-size:28px;font-weight:300;color:#1e1b4b;line-height:1.1;font-family:Georgia,serif;margin-bottom:10px;">
+          A place to<br>
+          <span style="font-style:italic;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">belong</span> and<br>
+          grow together.
+        </div>
+        <p style="color:#4b5563;font-size:11px;line-height:1.5;margin-bottom:16px;">We are a community rooted in faith, committed to one another, and sent to serve the world.</p>
+        <div style="display:flex;gap:8px;">
+          <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:600;box-shadow:0 4px 12px rgba(99,102,241,0.3);">I'm New Here →</div>
+          <div style="background:white;border:1px solid rgba(99,102,241,0.2);color:#6366f1;padding:8px 16px;border-radius:8px;font-size:11px;">▷ Watch Live</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Soft Brand Immersion</h3>
+      <p>Gentle brand-colored gradient background, deep indigo text, subtle glow. Warm and inviting yet still premium. Accessible — no harsh contrast. Familiar but elevated. Works beautifully on mobile.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px;">Click your preferred direction. You can also mix elements — e.g., "A's typography with C's background."</p>
