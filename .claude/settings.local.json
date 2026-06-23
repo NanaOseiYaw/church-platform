@@ -124,7 +124,8 @@
       "Bash(echo \"email: $\\(git config --global user.email\\)\")",
       "Bash(git --version)",
       "Bash(git init *)",
-      "Bash(grep -E \"\\(^|/\\)\\(vendor|node_modules\\)/|^\\\\.env$|public/build/\")"
+      "Bash(grep -E \"\\(^|/\\)\\(vendor|node_modules\\)/|^\\\\.env$|public/build/\")",
+      "Bash(git commit *)"
     ]
   }
 }
