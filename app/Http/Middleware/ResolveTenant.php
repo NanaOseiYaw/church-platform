@@ -31,17 +31,19 @@ class ResolveTenant
             return Church::find($id);
         }
 
-        // 1. Authenticated user — use their church
+        // 1. Authenticated user — use their church.
+        //
+        // An authenticated user NEVER falls through to the single-tenant
+        // fallback below. users.church_id is nullOnDelete, so removing a church
+        // leaves its members authenticated with church_id = NULL; letting those
+        // users drop through would hand them `Church::first()` — silently making
+        // an orphaned church_admin an administrator of an unrelated tenant.
+        // A user with no church simply has no tenant context (null is safe
+        // everywhere downstream: handle() and HandleInertiaRequests both accept it).
         if ($user = $request->user()) {
-            if ($user->church_id) {
-                return Church::find($user->church_id);
-            }
-            // Super admin has church_id = null — return null rather than falling
-            // through to the single-tenant fallback, which would silently assign
-            // the first church.
-            if ($user->hasRole('super_admin')) {
-                return null; // handle() and HandleInertiaRequests are both null-safe
-            }
+            return $user->church_id
+                ? Church::find($user->church_id)
+                : null;
         }
 
         // 2. Subdomain — future: resolve church by domain

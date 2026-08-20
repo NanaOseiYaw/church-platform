@@ -44,9 +44,13 @@ class SeriesController extends Controller
         abort_unless($series->church_id === app('church.id'), 404);
         abort_unless($series->is_active, 404);
 
+        // Use the shared publiclyVisible() contract rather than the raw legacy
+        // is_public column: a sermon explicitly marked visibility='members_only'
+        // can still carry is_public=true from before the visibility field
+        // existed, and would otherwise leak onto the public series page.
         $sermons = Sermon::where('church_id', $series->church_id)
             ->where('series_id', $series->id)
-            ->where('is_public', true)
+            ->publiclyVisible()
             ->orderByDesc('preached_at')
             ->get()
             ->map(fn ($s) => [

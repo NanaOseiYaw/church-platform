@@ -72,12 +72,12 @@ Route::middleware('privacy')->group(function () {
     Route::get('/ministries/youth', YouthController::class)->name('ministries.youth');
     Route::get('/announcements', PublicAnnouncementsController::class)->name('announcements');
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:10,1');
     Route::get('/give', DonationController::class)->name('donate');
     Route::get('/live',    LivestreamController::class)->name('livestream');
     Route::get('/gallery', GalleryController::class)->name('gallery');
     Route::get('/prayer',  [PrayerRequestController::class, 'index'])->name('prayer');
-    Route::post('/prayer', [PrayerRequestController::class, 'store'])->name('prayer.store');
+    Route::post('/prayer', [PrayerRequestController::class, 'store'])->name('prayer.store')->middleware('throttle:10,1');
 
     // Stripe Checkout
     Route::post('/give/checkout', [GiveController::class, 'checkout'])->name('give.checkout');
@@ -87,7 +87,7 @@ Route::middleware('privacy')->group(function () {
 // ── Church onboarding (guests only) ───────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/onboarding',          [OnboardingController::class, 'show'])  ->name('onboarding');
-    Route::post('/onboarding',         [OnboardingController::class, 'store']) ->name('onboarding.store');
+    Route::post('/onboarding',         [OnboardingController::class, 'store']) ->name('onboarding.store')->middleware('throttle:5,1');
 });
 // Welcome screen requires auth (user was just logged in by OnboardChurch action)
 Route::middleware('auth')->get('/onboarding/welcome', [OnboardingController::class, 'welcome'])->name('onboarding.welcome');
@@ -95,14 +95,14 @@ Route::middleware('auth')->get('/onboarding/welcome', [OnboardingController::cla
 // ── Auth routes (guests only) ──────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/login',    [LoginController::class, 'create'])->name('login');
-    Route::post('/login',   [LoginController::class, 'store'])->name('login.store');
+    Route::post('/login',   [LoginController::class, 'store'])->name('login.store')->middleware('throttle:6,1');
     Route::get('/register', [RegisterController::class, 'create'])->name('register');
-    Route::post('/register',[RegisterController::class, 'store'])->name('register.store');
+    Route::post('/register',[RegisterController::class, 'store'])->name('register.store')->middleware('throttle:5,1');
 
     Route::get('/forgot-password',         [PasswordResetController::class, 'requestForm'])->name('password.request');
-    Route::post('/forgot-password',        [PasswordResetController::class, 'sendLink'])->name('password.email');
+    Route::post('/forgot-password',        [PasswordResetController::class, 'sendLink'])->name('password.email')->middleware('throttle:5,1');
     Route::get('/reset-password/{token}',  [PasswordResetController::class, 'resetForm'])->name('password.reset');
-    Route::post('/reset-password',         [PasswordResetController::class, 'reset'])->name('password.update');
+    Route::post('/reset-password',         [PasswordResetController::class, 'reset'])->name('password.update')->middleware('throttle:5,1');
 });
 
 // ── Authenticated routes ───────────────────────────────────────────────────────

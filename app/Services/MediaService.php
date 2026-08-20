@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Requests\Media\UploadFileRequest;
 use App\Models\File;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -25,7 +26,7 @@ class MediaService
         int          $uploadedBy,
         bool         $isPublic = false,
     ): File {
-        $ext      = strtolower($uploadedFile->getClientOriginalExtension());
+        $ext      = $this->safeExtension($uploadedFile);
         $uuid     = (string) Str::uuid();
         $module   = $this->resolveModule($attachable);
         $disk     = $isPublic ? 'public' : 'local';
@@ -83,6 +84,33 @@ class MediaService
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────────
+
+    /**
+     * Resolve the extension the file will be *stored* under.
+     *
+     * The client-supplied extension is never trusted directly: it is accepted
+     * only when it appears in UploadFileRequest::ALLOWED_EXTENSIONS. Anything
+     * else falls back to the extension implied by the file's detected MIME
+     * type, and finally to no extension at all. This keeps a hostile name such
+     * as `payload.php` from ever reaching disk even if a future caller skips
+     * the form request's validation.
+     */
+    private function safeExtension(UploadedFile $uploadedFile): string
+    {
+        $claimed = strtolower($uploadedFile->getClientOriginalExtension());
+
+        if ($claimed !== '' && in_array($claimed, UploadFileRequest::ALLOWED_EXTENSIONS, true)) {
+            return $claimed;
+        }
+
+        $guessed = strtolower((string) $uploadedFile->guessExtension());
+
+        if ($guessed !== '' && in_array($guessed, UploadFileRequest::ALLOWED_EXTENSIONS, true)) {
+            return $guessed;
+        }
+
+        return '';
+    }
 
     /**
      * Return a short directory name based on the model class.

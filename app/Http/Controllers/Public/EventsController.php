@@ -13,14 +13,30 @@ class EventsController extends Controller
 {
     public function __construct(private readonly EventService $events) {}
 
-    /** GET /events/{event} — public single-event detail page */
+    /**
+     * GET /events/{event} — public single-event detail page.
+     *
+     * Must enforce exactly the same visibility contract as the listing above,
+     * otherwise content hidden from the index is still readable by anyone who
+     * guesses or is given the URL. Previously this only rejected `private`
+     * visibility and a null publish date, which left members-only events,
+     * not-yet-due scheduled events, and cancelled events publicly readable.
+     *
+     * Past events intentionally remain reachable — a permalink to an event that
+     * has already happened should not 404 — so `upcoming()` is not applied here.
+     */
     public function show(Event $event): Response
     {
         $churchId = app('church.id');
 
         abort_unless($event->church_id === $churchId, 404);
-        abort_unless($event->published_at !== null, 404);
-        abort_if($event->visibility === 'private', 404);
+
+        $isPubliclyVisible = Event::query()
+            ->whereKey($event->getKey())
+            ->publiclyVisible()
+            ->exists();
+
+        abort_unless($isPubliclyVisible, 404);
 
         return Inertia::render('Public/EventShow', [
             'event' => PublicEventResource::make($event)->toArray(request()),
