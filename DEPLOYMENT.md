@@ -268,7 +268,21 @@ server {
         try_files $uri $uri/ /index.php?$query_string;
     }
 
+    # ── Never execute anything under the uploads symlink ──────────────────────
+    # public/storage is a symlink to storage/app/public, which holds
+    # user-uploaded content. Without this block, a file that reached disk with
+    # a .php name would be handed to PHP-FPM and executed. Application-level
+    # validation already pins upload extensions to a safe whitelist; this is the
+    # second, independent layer so one bug is not enough to get code execution.
+    location ^~ /storage/ {
+        location ~ \.(?:php\d*|phtml|phar|pht|phps|cgi|pl|py|sh)$ { deny all; }
+        try_files $uri =404;
+    }
+
     location ~ \.php$ {
+        # try_files prevents path-info attacks such as /uploads/x.jpg/evil.php
+        # being passed to FPM as a script that does not exist on disk.
+        try_files      $uri =404;
         fastcgi_pass   unix:/var/run/php/php8.3-fpm.sock;
         fastcgi_index  index.php;
         fastcgi_param  SCRIPT_FILENAME $realpath_root$fastcgi_script_name;

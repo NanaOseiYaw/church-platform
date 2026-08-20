@@ -91,6 +91,9 @@ class HomeController extends Controller
     private function getLatestSermons(): array
     {
         return Sermon::publiclyVisible()
+            // Eager-loaded: the map below reads $s->sermonSeries->title, which
+            // would otherwise issue one extra query per sermon on the homepage.
+            ->with('sermonSeries:id,title')
             ->whereNotNull('preached_at')
             ->latest('preached_at')
             ->limit(3)

@@ -15,7 +15,7 @@ defineProps<{ activities: ActivityEntry[] }>()
 function moduleColor(action: string): string {
     const prefix = action.split('.')[0]
     const colors: Record<string, string> = {
-        auth:         'bg-indigo-400',
+        auth:         'bg-violet-400',
         member:       'bg-blue-400',
         department:   'bg-brand-400',
         announcement: 'bg-amber-400',
@@ -55,7 +55,7 @@ function timeAgo(iso: string): string {
                 <ShieldCheck class="h-4 w-4 text-gray-400" />
                 <h2 class="text-sm font-semibold text-gray-900">Recent Activity</h2>
             </div>
-            <Link href="/dashboard/audit" class="text-xs text-indigo-600 hover:underline">
+            <Link href="/dashboard/audit" class="text-xs text-brand-600 hover:underline">
                 View all →
             </Link>
         </div>

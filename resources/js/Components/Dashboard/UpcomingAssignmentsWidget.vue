@@ -31,12 +31,12 @@ function statusLabel(s: string): string {
         <!-- Header -->
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-sm font-semibold text-neutral-900 flex items-center gap-2">
-                <CalendarDays class="w-4 h-4 text-indigo-500" />
+                <CalendarDays class="w-4 h-4 text-brand-500" />
                 My Upcoming Schedule
             </h3>
             <Link
                 href="/dashboard/scheduling/my-schedule"
-                class="flex items-center gap-1 text-xs text-indigo-600 hover:underline"
+                class="flex items-center gap-1 text-xs text-brand-600 hover:underline"
             >
                 View all
                 <ArrowRight class="w-3 h-3" />
@@ -49,13 +49,13 @@ function statusLabel(s: string): string {
                 v-for="a in assignments"
                 :key="a.id"
                 href="/dashboard/scheduling/my-schedule"
-                class="flex items-start justify-between gap-3 rounded-xl bg-gray-50 px-3 py-2.5 hover:bg-indigo-50/40 transition-colors"
+                class="flex items-start justify-between gap-3 rounded-xl bg-gray-50 px-3 py-2.5 hover:bg-brand-50/40 transition-colors"
             >
                 <div class="min-w-0">
                     <p class="text-sm font-medium text-gray-900 truncate">{{ a.plan_title }}</p>
                     <p class="text-xs text-gray-500 mt-0.5">
                         {{ a.scheduled_at_formatted }}
-                        <span v-if="a.position" class="text-indigo-600"> · {{ a.position }}</span>
+                        <span v-if="a.position" class="text-brand-600"> · {{ a.position }}</span>
                     </p>
                     <span
                         v-if="a.plan_status === 'draft'"
@@ -78,7 +78,7 @@ function statusLabel(s: string): string {
             <p class="text-sm text-gray-400">No upcoming assignments</p>
             <Link
                 href="/dashboard/scheduling"
-                class="mt-1 text-xs text-indigo-500 hover:underline"
+                class="mt-1 text-xs text-brand-500 hover:underline"
             >
                 View scheduling →
             </Link>
