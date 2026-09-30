@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\AboutController;
+use App\Http\Controllers\Public\AboutPagesController;
 use App\Http\Controllers\Public\EventsController;
 use App\Http\Controllers\Public\SermonsController;
 use App\Http\Controllers\Public\DepartmentsController;
@@ -62,6 +63,15 @@ Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::middleware('privacy')->group(function () {
     Route::get('/', HomeController::class)->name('home');
     Route::get('/about', AboutController::class)->name('about');
+
+    // About sub-pages — the four sections common to every Church of Pentecost site.
+    Route::prefix('about')->name('about.')->group(function () {
+        Route::get('/leadership',  [AboutPagesController::class, 'leadership'])->name('leadership');
+        Route::get('/history',     [AboutPagesController::class, 'history'])->name('history');
+        Route::get('/beliefs',     [AboutPagesController::class, 'beliefs'])->name('beliefs');
+        Route::get('/core-values', [AboutPagesController::class, 'coreValues'])->name('core-values');
+    });
+
     Route::get('/events', EventsController::class)->name('events');
     Route::get('/events/{event}', [EventsController::class, 'show'])->name('events.show');
     Route::get('/sermons',        SermonsController::class)->name('sermons');
@@ -194,6 +204,8 @@ Route::middleware(['auth'])->group(function () {
         // 5. Public Website
         Route::get('/website', [ChurchSettingsController::class, 'website'])       ->name('website');
         Route::put('/website', [ChurchSettingsController::class, 'updateWebsite']) ->name('website.update');
+        Route::post('/website/page-hero-image',   [ChurchSettingsController::class, 'uploadPageHeroImage'])->name('website.page-hero-image');
+        Route::delete('/website/page-hero-image', [ChurchSettingsController::class, 'removePageHeroImage'])->name('website.page-hero-image.remove');
 
         // 6. Service Times
         Route::get('/services', [ChurchSettingsController::class, 'services'])       ->name('services');

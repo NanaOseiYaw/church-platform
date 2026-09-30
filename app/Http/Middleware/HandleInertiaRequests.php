@@ -26,6 +26,20 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
 
+            // Which About sub-pages may be linked. Leadership and History stay out
+            // of this list until an admin fills in the local content, so neither the
+            // navbar dropdown nor the About sub-nav ever links to a placeholder page.
+            'aboutPages' => \App\Support\AboutPages::ready($church),
+
+            // Header background images, resolved per-page → site-wide → gradient.
+            // Shared here so every page using PageHero picks its image up without
+            // each controller having to pass anything.
+            'pageHeroImage'  => \App\Support\PageHeroes::default($church),
+            'pageHeroImages' => \App\Support\PageHeroes::map($church),
+            'pageHeroPaths'  => collect(\App\Support\PageHeroes::PAGES)
+                ->mapWithKeys(fn ($p) => [$p['path'] => $p['key']])
+                ->all(),
+
             'church' => $church ? [
                 'name'           => $church->name,
                 'tagline'        => $church->tagline ?? config('church.tagline', 'A Place to Belong'),

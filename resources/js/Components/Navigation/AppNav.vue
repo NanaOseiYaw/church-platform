@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import AppButton from '@/Components/UI/AppButton.vue'
-import { Menu, X } from 'lucide-vue-next'
+import { Menu, X, ChevronDown } from 'lucide-vue-next'
 import { useChurch } from '@/composables/useChurch'
 import { useTenantStore } from '@/stores/useTenantStore'
 
@@ -15,8 +15,26 @@ const mobileOpen = ref(false)
 // Scroll only adds a shadow for elevation — the brand-600 background is always solid
 const scrolled   = ref(false)
 
-const navLinks = [
-    { label: 'About',         href: '/about' },
+interface NavChild { label: string; href: string; slug: string; description?: string }
+interface NavLink  { label: string; href: string; children?: NavChild[] }
+
+// Sub-pages that are not yet filled in are omitted by the server (see
+// App\Support\AboutPages), so the dropdown never links to a placeholder page.
+const readyAboutPages = computed<string[]>(() => (page.props as any).aboutPages ?? [])
+
+// The About group mirrors the structure used across Church of Pentecost
+// national sites: Leadership, History, Beliefs & Tenets, Core Values.
+const allNavLinks: NavLink[] = [
+    {
+        label: 'About',
+        href:  '/about',
+        children: [
+            { slug: 'leadership',  label: 'Leadership',       href: '/about/leadership',  description: 'Meet the leadership of the assembly' },
+            { slug: 'history',     label: 'Our History',      href: '/about/history',     description: 'From 1937 in the Gold Coast to today' },
+            { slug: 'beliefs',     label: 'Beliefs & Tenets', href: '/about/beliefs',     description: 'The eleven tenets of the Church' },
+            { slug: 'core-values', label: 'Core Values',      href: '/about/core-values', description: 'What shapes how we serve' },
+        ],
+    },
     { label: 'Ministries',    href: '/ministries' },
     { label: 'Events',        href: '/events' },
     { label: 'Sermons',       href: '/sermons' },
@@ -27,12 +45,68 @@ const navLinks = [
     { label: 'Contact',       href: '/contact' },
 ]
 
+// Drop any sub-page the server has not marked ready. If that leaves a group with
+// no children at all, it degrades to a plain link rather than an empty dropdown.
+const navLinks = computed<NavLink[]>(() =>
+    allNavLinks.map((link) => {
+        if (!link.children) return link
+
+        const children = link.children.filter(c => readyAboutPages.value.includes(c.slug))
+
+        return children.length ? { ...link, children } : { label: link.label, href: link.href }
+    })
+)
+
+// Desktop dropdown. Opens on hover and on focus, so it is reachable by keyboard
+// as well as by mouse; Escape closes it and returns focus to the trigger.
+const openMenu = ref<string | null>(null)
+let closeTimer: ReturnType<typeof setTimeout> | undefined
+
+function openDropdown(label: string) {
+    clearTimeout(closeTimer)
+    openMenu.value = label
+}
+
+// Small delay so moving the pointer from the trigger into the panel
+// does not close the menu in the gap between them.
+function scheduleClose() {
+    clearTimeout(closeTimer)
+    closeTimer = setTimeout(() => { openMenu.value = null }, 120)
+}
+
+function closeDropdown() {
+    clearTimeout(closeTimer)
+    openMenu.value = null
+}
+
+// Mobile accordion — independent of the desktop dropdown state.
+const expanded = ref<string | null>(null)
+function toggleExpanded(label: string) {
+    expanded.value = expanded.value === label ? null : label
+}
+
+function closeMobile() {
+    mobileOpen.value = false
+    expanded.value = null
+}
+
 function handleScroll() {
     scrolled.value = window.scrollY > 12
 }
 
-onMounted(() => window.addEventListener('scroll', handleScroll, { passive: true }))
-onUnmounted(() => window.removeEventListener('scroll', handleScroll))
+function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'Escape') closeDropdown()
+}
+
+onMounted(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('keydown', handleKeydown)
+})
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll)
+    window.removeEventListener('keydown', handleKeydown)
+    clearTimeout(closeTimer)
+})
 </script>
 
 <template>
@@ -63,14 +137,71 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 
             <!-- Desktop nav links -->
             <div class="hidden lg:flex items-center gap-0.5">
-                <Link
-                    v-for="link in navLinks"
-                    :key="link.href"
-                    :href="link.href"
-                    class="px-3.5 py-2 text-sm font-medium rounded-lg transition-all duration-150 text-white/75 hover:text-white hover:bg-white/12"
-                >
-                    {{ link.label }}
-                </Link>
+                <template v-for="link in navLinks" :key="link.href">
+
+                    <!-- Plain link -->
+                    <Link
+                        v-if="!link.children"
+                        :href="link.href"
+                        class="px-3.5 py-2 text-sm font-medium rounded-lg transition-all duration-150 text-white/75 hover:text-white hover:bg-white/12"
+                    >
+                        {{ link.label }}
+                    </Link>
+
+                    <!-- Link with dropdown -->
+                    <div
+                        v-else
+                        class="relative"
+                        @mouseenter="openDropdown(link.label)"
+                        @mouseleave="scheduleClose"
+                    >
+                        <Link
+                            :href="link.href"
+                            class="flex items-center gap-1 px-3.5 py-2 text-sm font-medium rounded-lg transition-all duration-150 text-white/75 hover:text-white hover:bg-white/12"
+                            :aria-expanded="openMenu === link.label"
+                            aria-haspopup="true"
+                            @focus="openDropdown(link.label)"
+                        >
+                            {{ link.label }}
+                            <ChevronDown
+                                class="w-3.5 h-3.5 transition-transform duration-200"
+                                :class="openMenu === link.label && 'rotate-180'"
+                                aria-hidden="true"
+                            />
+                        </Link>
+
+                        <Transition
+                            enter-active-class="transition duration-150 ease-out"
+                            enter-from-class="opacity-0 -translate-y-1"
+                            enter-to-class="opacity-100 translate-y-0"
+                            leave-active-class="transition duration-100 ease-in"
+                            leave-from-class="opacity-100 translate-y-0"
+                            leave-to-class="opacity-0 -translate-y-1"
+                        >
+                            <div
+                                v-if="openMenu === link.label"
+                                class="absolute left-0 top-full pt-2 w-72"
+                            >
+                                <div class="bg-white rounded-xl shadow-elevated border border-neutral-100 p-2 overflow-hidden">
+                                    <Link
+                                        v-for="child in link.children"
+                                        :key="child.href"
+                                        :href="child.href"
+                                        class="block px-3 py-2.5 rounded-lg hover:bg-brand-50 transition-colors group/item"
+                                        @click="closeDropdown"
+                                    >
+                                        <span class="block text-sm font-semibold text-neutral-900 group-hover/item:text-brand-700">
+                                            {{ child.label }}
+                                        </span>
+                                        <span v-if="child.description" class="block text-xs text-neutral-500 mt-0.5 leading-snug">
+                                            {{ child.description }}
+                                        </span>
+                                    </Link>
+                                </div>
+                            </div>
+                        </Transition>
+                    </div>
+                </template>
             </div>
 
             <!-- Desktop CTAs -->
@@ -142,15 +273,55 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
                 class="lg:hidden bg-brand-700 border-t border-white/10"
             >
                 <div class="mx-auto max-w-7xl px-6 py-4 flex flex-col gap-0.5">
-                    <Link
-                        v-for="link in navLinks"
-                        :key="link.href"
-                        :href="link.href"
-                        class="px-3.5 py-2.5 text-sm font-medium text-white/75 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                        @click="mobileOpen = false"
-                    >
-                        {{ link.label }}
-                    </Link>
+                    <template v-for="link in navLinks" :key="link.href">
+
+                        <!-- Plain link -->
+                        <Link
+                            v-if="!link.children"
+                            :href="link.href"
+                            class="px-3.5 py-2.5 text-sm font-medium text-white/75 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                            @click="closeMobile"
+                        >
+                            {{ link.label }}
+                        </Link>
+
+                        <!-- Group: tapping the label expands; the label itself still links -->
+                        <div v-else>
+                            <div class="flex items-center">
+                                <Link
+                                    :href="link.href"
+                                    class="flex-1 px-3.5 py-2.5 text-sm font-medium text-white/75 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                    @click="closeMobile"
+                                >
+                                    {{ link.label }}
+                                </Link>
+                                <button
+                                    type="button"
+                                    class="p-2 mr-1 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                                    :aria-expanded="expanded === link.label"
+                                    :aria-label="`${expanded === link.label ? 'Collapse' : 'Expand'} ${link.label} menu`"
+                                    @click="toggleExpanded(link.label)"
+                                >
+                                    <ChevronDown
+                                        class="w-4 h-4 transition-transform duration-200"
+                                        :class="expanded === link.label && 'rotate-180'"
+                                    />
+                                </button>
+                            </div>
+
+                            <div v-if="expanded === link.label" class="ml-3.5 pl-3 border-l border-white/15 flex flex-col gap-0.5 mt-0.5 mb-1">
+                                <Link
+                                    v-for="child in link.children"
+                                    :key="child.href"
+                                    :href="child.href"
+                                    class="px-3.5 py-2 text-sm text-white/65 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                    @click="closeMobile"
+                                >
+                                    {{ child.label }}
+                                </Link>
+                            </div>
+                        </div>
+                    </template>
 
                     <!-- Mobile CTAs -->
                     <div class="mt-3 pt-3 border-t border-white/10 space-y-2">

@@ -156,12 +156,18 @@ class DemoSeeder extends Seeder
     private function seedDepartments(): void
     {
         $defs = [
-            ['key' => 'worship',  'name' => 'Worship & Music',          'icon' => 'Music',          'color' => '#3b8ac8', 'coordinator' => 'kwame',  'desc' => 'Leading the assembly into the presence of God through Spirit-filled worship.'],
-            ['key' => 'media',    'name' => 'Media & Communications',   'icon' => 'Radio',          'color' => '#0ea5e9', 'coordinator' => 'abena',  'desc' => 'Sound, livestream, photography and online presence for every service.'],
-            ['key' => 'ushering', 'name' => 'Ushering & Protocol',      'icon' => 'Users',          'color' => '#f59e0b', 'coordinator' => 'yaw',    'desc' => 'Welcoming members and guests and keeping order during services.'],
-            ['key' => 'children', 'name' => "Children's Ministry",      'icon' => 'Baby',           'color' => '#ec4899', 'coordinator' => 'akosua', 'desc' => 'Nurturing the next generation in the knowledge of Christ.'],
-            ['key' => 'evangel',  'name' => 'Evangelism & Missions',    'icon' => 'Megaphone',      'color' => '#10b981', 'coordinator' => null,     'desc' => 'Taking the gospel to our community and the nations.'],
-            ['key' => 'prayer',   'name' => 'Prayer & Intercession',    'icon' => 'HeartHandshake', 'color' => '#8b5cf6', 'coordinator' => null,     'desc' => 'Standing in the gap for the church, the nation and the lost.'],
+            // NOTE: `icon` is an EMOJI, not a Lucide component name. The admin form
+            // labels this field "Icon (emoji)" with a 🏛 placeholder, and every render
+            // site (department cards, event/announcement/task chips, member profiles)
+            // prints the value as text with a '🏛' fallback. Seeding Lucide names here
+            // rendered the literal words "Music", "Baby", "Radio" on top of the
+            // department titles in the Workspaces grid.
+            ['key' => 'worship',  'name' => 'Worship & Music',          'icon' => '🎵', 'color' => '#3b8ac8', 'coordinator' => 'kwame',  'desc' => 'Leading the assembly into the presence of God through Spirit-filled worship.'],
+            ['key' => 'media',    'name' => 'Media & Communications',   'icon' => '📻', 'color' => '#0ea5e9', 'coordinator' => 'abena',  'desc' => 'Sound, livestream, photography and online presence for every service.'],
+            ['key' => 'ushering', 'name' => 'Ushering & Protocol',      'icon' => '🤝', 'color' => '#f59e0b', 'coordinator' => 'yaw',    'desc' => 'Welcoming members and guests and keeping order during services.'],
+            ['key' => 'children', 'name' => "Children's Ministry",      'icon' => '🧒', 'color' => '#ec4899', 'coordinator' => 'akosua', 'desc' => 'Nurturing the next generation in the knowledge of Christ.'],
+            ['key' => 'evangel',  'name' => 'Evangelism & Missions',    'icon' => '📣', 'color' => '#10b981', 'coordinator' => null,     'desc' => 'Taking the gospel to our community and the nations.'],
+            ['key' => 'prayer',   'name' => 'Prayer & Intercession',    'icon' => '🙏', 'color' => '#8b5cf6', 'coordinator' => null,     'desc' => 'Standing in the gap for the church, the nation and the lost.'],
         ];
 
         foreach ($defs as $def) {

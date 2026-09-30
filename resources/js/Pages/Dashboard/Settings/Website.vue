@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3'
+import { ref } from 'vue'
+import { useForm, router } from '@inertiajs/vue3'
 import SettingsLayout from '@/Layouts/SettingsLayout.vue'
 import AppInput from '@/Components/UI/AppInput.vue'
 import AppSelect from '@/Components/UI/AppSelect.vue'
 import AppButton from '@/Components/UI/AppButton.vue'
-import { Plus, Trash2, Link2 } from 'lucide-vue-next'
+import { Plus, Trash2, Link2, ImagePlus, Upload } from 'lucide-vue-next'
 
 interface FooterNavLink {
     label: string
@@ -23,12 +24,25 @@ interface WebsiteConfig {
 }
 
 interface Settings {
-    privacy_mode: boolean
-    footer_nav:   FooterNav
+    privacy_mode:    boolean
+    page_hero_image: string | null
+    footer_nav:      FooterNav
+}
+
+interface HeroPage {
+    key:    string
+    label:  string
+    path:   string
+    group?: string
+    image:  string | null
 }
 
 // Named 'websiteConfig' (not 'church') to avoid overwriting the shared TenantStore prop.
-const props = defineProps<{ websiteConfig: WebsiteConfig; settings: Settings }>()
+const props = defineProps<{
+    websiteConfig: WebsiteConfig
+    settings:      Settings
+    heroPages:     HeroPage[]
+}>()
 
 const defaultLinks: FooterNav = {
     explore_links: [
@@ -87,6 +101,47 @@ const languages = [
     { value: 'pt', label: 'Portuguese' },
     { value: 'nl', label: 'Dutch' },
 ]
+
+// ── Header images ────────────────────────────────────────────────────────────
+// Uploads and clears save immediately rather than waiting for a Save of
+// unrelated website settings. `page` identifies which page is being changed;
+// omitting it targets the site-wide default that every page falls back to.
+const heroFileRefs = ref<Record<string, HTMLInputElement | null>>({})
+const heroForm     = useForm({ page_hero_image: null as File | null, page: null as string | null })
+const uploadingKey = ref<string | null>(null)
+
+function setHeroFileRef(key: string, el: any) {
+    heroFileRefs.value[key] = el as HTMLInputElement | null
+}
+
+function triggerHeroUpload(key: string) {
+    heroFileRefs.value[key]?.click()
+}
+
+function onHeroFileChange(e: Event, key: string | null) {
+    const file = (e.target as HTMLInputElement).files?.[0]
+    if (!file) return
+
+    uploadingKey.value        = key ?? '__default__'
+    heroForm.page_hero_image  = file
+    heroForm.page             = key
+    heroForm.post('/dashboard/settings/website/page-hero-image', {
+        preserveScroll: true,
+        onFinish: () => {
+            heroForm.reset()
+            uploadingKey.value = null
+            const input = heroFileRefs.value[key ?? '__default__']
+            if (input) input.value = ''
+        },
+    })
+}
+
+function removeHero(key: string | null) {
+    router.delete('/dashboard/settings/website/page-hero-image', {
+        data: key ? { page: key } : {},
+        preserveScroll: true,
+    })
+}
 </script>
 
 <template>
@@ -97,6 +152,152 @@ const languages = [
             <p class="text-sm text-neutral-500 mt-0.5">
                 Domain, locale, and visibility settings for your public church website.
             </p>
+        </div>
+
+        <!-- ── Header images ──────────────────────────────────────────────────
+             Outside the main form: each upload saves immediately, not on Save. -->
+        <div class="max-w-2xl mb-5">
+            <div class="bg-white border border-neutral-100 rounded-xl divide-y divide-neutral-100">
+
+                <div class="px-5 py-4 flex items-start gap-2">
+                    <ImagePlus class="w-4 h-4 text-neutral-400 shrink-0 mt-0.5" />
+                    <div>
+                        <h3 class="text-sm font-semibold text-neutral-900">Header images</h3>
+                        <p class="text-xs text-neutral-500 mt-0.5">
+                            The photo behind the title at the top of each page. A page uses its own image
+                            if it has one, otherwise the default below, otherwise the brand gradient.
+                            Recommended: landscape, at least 1920×1080&nbsp;px.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Default, used by every page without its own image -->
+                <div class="p-5">
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-28 shrink-0 rounded-lg overflow-hidden aspect-[16/9] relative bg-neutral-950 border border-neutral-200"
+                            :class="!settings.page_hero_image && 'gradient-dark-mesh'"
+                        >
+                            <img
+                                v-if="settings.page_hero_image"
+                                :src="settings.page_hero_image"
+                                class="w-full h-full object-cover"
+                                alt=""
+                            />
+                            <div v-if="settings.page_hero_image" class="absolute inset-0 bg-neutral-950/55" aria-hidden="true"></div>
+                        </div>
+
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm font-semibold text-neutral-900">Default for all pages</p>
+                            <p class="text-xs text-neutral-500 mt-0.5">
+                                {{ settings.page_hero_image
+                                    ? 'Used by any page without its own image.'
+                                    : 'No image — pages without their own use the brand gradient.' }}
+                            </p>
+
+                            <input
+                                :ref="(el) => setHeroFileRef('__default__', el)"
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp"
+                                class="sr-only"
+                                @change="(e) => onHeroFileChange(e, null)"
+                            />
+
+                            <div class="flex flex-wrap items-center gap-2 mt-2.5">
+                                <AppButton
+                                    variant="outline" size="sm" type="button"
+                                    :loading="uploadingKey === '__default__'"
+                                    @click="triggerHeroUpload('__default__')"
+                                >
+                                    <Upload class="w-3.5 h-3.5 mr-1.5" />
+                                    {{ settings.page_hero_image ? 'Replace' : 'Upload' }}
+                                </AppButton>
+                                <AppButton
+                                    v-if="settings.page_hero_image"
+                                    variant="ghost" size="sm" type="button"
+                                    class="!text-rose-600 hover:!bg-rose-50"
+                                    @click="removeHero(null)"
+                                >
+                                    <Trash2 class="w-3.5 h-3.5 mr-1.5" />
+                                    Use gradient
+                                </AppButton>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Per-page overrides -->
+                <div class="px-5 py-3 bg-neutral-50/60">
+                    <p class="text-xs font-semibold text-neutral-700">Individual pages</p>
+                    <p class="text-xs text-neutral-500 mt-0.5">Give any page its own image to override the default.</p>
+                </div>
+
+                <div
+                    v-for="p in heroPages"
+                    :key="p.key"
+                    class="px-5 py-3.5 flex items-center gap-4"
+                >
+                    <div
+                        class="w-20 shrink-0 rounded-md overflow-hidden aspect-[16/9] relative bg-neutral-950 border border-neutral-200"
+                        :class="!(p.image || settings.page_hero_image) && 'gradient-dark-mesh'"
+                    >
+                        <img
+                            v-if="p.image || settings.page_hero_image"
+                            :src="p.image || settings.page_hero_image || ''"
+                            class="w-full h-full object-cover"
+                            :class="!p.image && 'opacity-45'"
+                            alt=""
+                        />
+                        <div v-if="p.image || settings.page_hero_image" class="absolute inset-0 bg-neutral-950/55" aria-hidden="true"></div>
+                    </div>
+
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-medium text-neutral-900 truncate">
+                            <span v-if="p.group" class="text-neutral-400">{{ p.group }} › </span>{{ p.label }}
+                        </p>
+                        <p class="text-xs mt-0.5" :class="p.image ? 'text-neutral-500' : 'text-neutral-400'">
+                            {{ p.image
+                                ? 'Own image'
+                                : (settings.page_hero_image ? 'Using default' : 'Using gradient') }}
+                            <span class="text-neutral-300"> · {{ p.path }}</span>
+                        </p>
+                    </div>
+
+                    <input
+                        :ref="(el) => setHeroFileRef(p.key, el)"
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        class="sr-only"
+                        @change="(e) => onHeroFileChange(e, p.key)"
+                    />
+
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <AppButton
+                            variant="outline" size="sm" type="button"
+                            :loading="uploadingKey === p.key"
+                            @click="triggerHeroUpload(p.key)"
+                        >
+                            <Upload class="w-3.5 h-3.5" />
+                        </AppButton>
+                        <AppButton
+                            v-if="p.image"
+                            variant="ghost" size="sm" type="button"
+                            class="!text-rose-600 hover:!bg-rose-50"
+                            :aria-label="`Remove image for ${p.label}`"
+                            @click="removeHero(p.key)"
+                        >
+                            <Trash2 class="w-3.5 h-3.5" />
+                        </AppButton>
+                    </div>
+                </div>
+
+                <div class="px-5 py-3">
+                    <p class="text-xs text-neutral-400">JPG, PNG or WebP · max 5 MB</p>
+                    <p v-if="(heroForm.errors as any).page_hero_image" class="text-xs text-rose-500 mt-1">
+                        {{ (heroForm.errors as any).page_hero_image }}
+                    </p>
+                </div>
+            </div>
         </div>
 
         <form @submit.prevent="submit" class="max-w-xl space-y-5">

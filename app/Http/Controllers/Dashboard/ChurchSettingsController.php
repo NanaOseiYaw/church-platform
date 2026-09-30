@@ -11,6 +11,7 @@ use App\Models\Department;
 use App\Models\Event;
 use App\Models\File;
 use App\Models\User;
+use App\Support\PageHeroes;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -94,8 +95,12 @@ class ChurchSettingsController extends Controller
             'members_count'     => User::where('church_id', $churchId)->count(),
             'departments_count' => Department::where('church_id', $churchId)->count(),
             'upcoming_events'   => Event::forChurch($churchId)->where('start_at', '>=', now())->count(),
+            // `status` is a computed accessor on the model, NOT a column — querying
+            // it silently returns 0 on SQLite (which treats an unresolved quoted
+            // identifier as a string literal) and throws "Unknown column 'status'"
+            // on MySQL/PostgreSQL, 500-ing this page in production. Use the scope.
             'announcements'     => Announcement::where('church_id', $churchId)
-                ->where('status', 'published')->count(),
+                ->published()->count(),
             'last_updated_at'   => $church->updated_at?->toISOString(),
         ];
 
@@ -230,6 +235,90 @@ class ChurchSettingsController extends Controller
         return back()->with('success', 'Hero image uploaded.');
     }
 
+    /**
+     * POST /dashboard/settings/website/page-hero-image
+     *
+     * Background image for the header of every inner page (About, Events,
+     * Sermons …). The homepage has its own, above. When this is unset the
+     * headers fall back to the brand gradient.
+     */
+    public function uploadPageHeroImage(Request $request): RedirectResponse
+    {
+        $this->authorizeSettings();
+        $validated = $request->validate([
+            'page_hero_image' => ['required', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
+            // Omitted means the site-wide default; otherwise it must be a page we know.
+            'page'            => ['nullable', 'string', Rule::in(PageHeroes::keys())],
+        ]);
+
+        $path = $request->file('page_hero_image')->store('hero-images', 'public');
+        $url  = Storage::disk('public')->url($path);
+        $page = $validated['page'] ?? null;
+
+        $this->writeHeroImage($page, $url);
+        $this->auditSettings($request, 'settings.website.page_hero_image.uploaded', [], [
+            'page'  => $page ?? 'default',
+            'image' => $url,
+        ]);
+
+        return back()->with('success', 'Header image uploaded.');
+    }
+
+    /**
+     * Persist a hero image for a page, or for the site-wide default when
+     * $page is null. The homepage writes to its original settings location.
+     */
+    private function writeHeroImage(?string $page, ?string $url): void
+    {
+        if ($page === null) {
+            $this->saveSettings('website', ['page_hero_image' => $url]);
+
+            return;
+        }
+
+        [$namespace, $path] = PageHeroes::storageTarget($page);
+
+        if (! str_contains($path, '.')) {
+            $this->saveSettings($namespace, [$path => $url]);
+
+            return;
+        }
+
+        // Nested map (website.page_hero_images.{key}) — merge rather than replace
+        // so setting one page's image never clears the others.
+        [$bag, $key] = explode('.', $path, 2);
+        $existing    = $this->getSettings($namespace)[$bag] ?? [];
+
+        if ($url === null) {
+            unset($existing[$key]);
+        } else {
+            $existing[$key] = $url;
+        }
+
+        $this->saveSettings($namespace, [$bag => $existing]);
+    }
+
+    /**
+     * DELETE /dashboard/settings/website/page-hero-image
+     *
+     * Clears the image so inner-page headers return to the brand gradient.
+     */
+    public function removePageHeroImage(Request $request): RedirectResponse
+    {
+        $this->authorizeSettings();
+        $validated = $request->validate([
+            'page' => ['nullable', 'string', Rule::in(PageHeroes::keys())],
+        ]);
+
+        $page = $validated['page'] ?? null;
+        $this->writeHeroImage($page, null);
+        $this->auditSettings($request, 'settings.website.page_hero_image.removed', [], ['page' => $page ?? 'default']);
+
+        return back()->with('success', $page === null
+            ? 'Default header image removed.'
+            : 'Header image removed — this page now uses the default.');
+    }
+
     /** POST /dashboard/settings/branding/favicon */
     public function uploadFavicon(Request $request): RedirectResponse
     {
@@ -351,11 +440,20 @@ class ChurchSettingsController extends Controller
     {
         $this->authorizeSettings();
 
+        $heroImages = PageHeroes::map($this->resolvedChurch());
+
         return Inertia::render('Dashboard/Settings/Website', [
             'websiteConfig' => $this->resolvedChurch()->only(['domain', 'timezone', 'language']),
+
+            // Every page that has a header, each with its own image if one is set.
+            'heroPages' => collect(PageHeroes::PAGES)
+                ->map(fn ($p) => $p + ['image' => $heroImages[$p['key']] ?? null])
+                ->values()
+                ->all(),
             'settings'      => array_merge(
                 [
-                    'privacy_mode'  => false,
+                    'privacy_mode'    => false,
+                    'page_hero_image' => null,
                     'footer_nav'    => [
                         'explore_links' => [
                             ['label' => 'About Us',   'href' => '/about'],
