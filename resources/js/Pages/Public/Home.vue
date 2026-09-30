@@ -75,7 +75,12 @@ const mainServiceDay = computed(() => {
             <!-- Dark overlay for legibility when hero image is set -->
             <div v-if="props.heroImage" class="absolute inset-0 bg-black/55 pointer-events-none" aria-hidden="true"></div>
 
-            <div class="relative mx-auto w-full max-w-7xl px-6 lg:px-8 flex-1 flex flex-col justify-center pt-28 pb-12">
+            <!--
+                z-10 keeps this above the bottom fade-to-white. Without it the fade
+                is later in the DOM at the same stacking level and paints over the
+                content, washing out the service times that sit lowest in the hero.
+            -->
+            <div class="relative z-10 mx-auto w-full max-w-7xl px-6 lg:px-8 flex-1 flex flex-col justify-center pt-28 pb-12">
 
                 <!-- Eyebrow + live chip row -->
                 <div class="flex flex-wrap items-center gap-4 md:gap-8 mb-8 reveal">
@@ -130,19 +135,24 @@ const mainServiceDay = computed(() => {
                             <span class="text-xs text-white/30">{{ stat.label }}</span>
                         </div>
                     </div>
-                    <!-- Service times (compact) -->
-                    <div class="flex flex-wrap gap-x-6 gap-y-2">
+                    <!--
+                        Service times. This is practical information a visitor is
+                        actively looking for, so it is sized and weighted to be read
+                        rather than treated as decoration. Contrast is set for the
+                        worst case — a light hero photo behind the bottom fade.
+                    -->
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-2.5">
                         <div
                             v-for="service in serviceTimes"
                             :key="service.day"
-                            class="flex items-center gap-2 text-xs text-white/40"
+                            class="flex items-center gap-2 text-sm"
                         >
-                            <Calendar class="w-3.5 h-3.5 text-brand-500 shrink-0" />
-                            <span class="font-medium text-white/60">{{ service.day }}</span>
-                            <span class="whitespace-nowrap">{{ service.times.join(' · ') }}</span>
+                            <Calendar class="w-4 h-4 text-brand-300 shrink-0" aria-hidden="true" />
+                            <span class="font-semibold text-white">{{ service.day }}</span>
+                            <span class="whitespace-nowrap text-white/80">{{ service.times.join(' · ') }}</span>
                         </div>
                         <AppButton href="/contact" variant="ghost" size="xs"
-                            class="!text-white/40 hover:!text-white hover:!bg-white/10 !px-2">
+                            class="!text-white/85 hover:!text-white hover:!bg-white/15 !px-2 font-medium">
                             Directions →
                         </AppButton>
                     </div>
