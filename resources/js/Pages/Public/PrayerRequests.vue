@@ -37,11 +37,32 @@ function submit() {
         title="Prayer Requests"
         :description="`Share your prayer needs with ${church?.name ?? 'our church community'}.`"
     >
+        <!--
+            NOTE: the prop is `subtitle`, not `description`. This previously passed
+            `:description`, which PageHero does not declare, so the supporting line
+            silently never rendered at all.
+
+            The background image is not hard-coded here — it comes from
+            Settings → Public Website → Header images → Prayer, falling back to the
+            site-wide default and then to the brand gradient.
+        -->
         <PageHero
             eyebrow="Prayer"
             title="Submit a Prayer Request"
-            :description="`We believe in the power of prayer. Share your request and our community will pray with you.`"
-        />
+            subtitle="We believe in the power of prayer. Share your request and our community will pray with you."
+        >
+            <template #actions>
+                <figure class="max-w-2xl border-l-2 border-brand-400/70 pl-5">
+                    <blockquote class="font-serif text-lg md:text-xl italic text-white/90 leading-relaxed">
+                        &ldquo;Do not be anxious about anything, but in every situation, by prayer
+                        and petition, with thanksgiving, present your requests to God.&rdquo;
+                    </blockquote>
+                    <figcaption class="mt-3 text-xs font-semibold tracking-[0.2em] uppercase text-brand-300">
+                        Philippians 4:6
+                    </figcaption>
+                </figure>
+            </template>
+        </PageHero>
 
         <SectionWrapper class="py-16">
             <div class="max-w-2xl mx-auto">
