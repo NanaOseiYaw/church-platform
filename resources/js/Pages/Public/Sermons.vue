@@ -38,7 +38,7 @@ const uniqueSeries = computed(() => {
 
         <PageHero
             eyebrow="Teaching Library"
-            title="Sermons & Series"
+            title="Sermons"
             :subtitle="sermonsSubtitle ?? 'Deep, scripture-rooted teaching to strengthen your faith and equip you for daily life.'"
         />
 

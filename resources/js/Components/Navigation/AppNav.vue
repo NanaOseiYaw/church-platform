@@ -43,22 +43,35 @@ const allNavLinks: NavLink[] = [
             { slug: 'history',     label: 'Our History',      href: '/about/history',     description: 'From 1937 in the Gold Coast to today' },
         ],
     },
-    { label: 'Ministries',    href: '/ministries' },
-    { label: 'Events',        href: '/events' },
+    { label: 'Ministries', href: '/ministries' },
     {
-        label: 'Sermons',
-        href:  '/sermons',
+        // "What's On" rather than "Events & News": it is the phrase the homepage
+        // already uses for this material, and it asks the visitor's question
+        // rather than naming our two content types.
+        label: "What's On",
+        href:  '/events',
         children: [
-            // As with About, the first child is the parent page itself, so the
-            // group's own destination is reachable from inside the menu too.
-            { label: 'All Sermons', href: '/sermons', description: 'The full library, most recent first' },
-            { label: 'Series',      href: '/series',  description: 'Messages grouped into teaching series' },
+            // As with About, the first child is the group's own destination, so
+            // clicking the label and opening the menu lead to the same place
+            // rather than the label being a dead end.
+            { label: 'Events',        href: '/events',        description: 'Services, meetings and gatherings' },
+            { label: 'Announcements', href: '/announcements', description: 'News from the assembly' },
         ],
     },
-    { label: 'Gallery',       href: '/gallery' },
-    { label: 'Announcements', href: '/announcements' },
-    { label: 'Prayer',        href: '/prayer' },
-    { label: 'Contact',       href: '/contact' },
+    {
+        label: 'Media',
+        href:  '/sermons',
+        children: [
+            { label: 'Sermons', href: '/sermons', description: 'The full library, most recent first' },
+            { label: 'Series',  href: '/series',  description: 'Messages grouped into teaching series' },
+            { label: 'Gallery', href: '/gallery', description: 'Photos from the life of the church' },
+        ],
+    },
+    // Prayer and Contact stay one click away on purpose. They are what a visitor
+    // goes looking for, and burying them to save two slots would cost more than
+    // the crowding does.
+    { label: 'Prayer',  href: '/prayer' },
+    { label: 'Contact', href: '/contact' },
 ]
 
 // Drop any sub-page the server has not marked ready. If that leaves a group with
