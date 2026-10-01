@@ -85,7 +85,6 @@ const mainServiceDay = computed(() => {
                 <!-- Eyebrow + live chip row -->
                 <div class="flex flex-wrap items-center gap-4 md:gap-8 mb-8 reveal">
                     <div class="flex items-center gap-3 min-w-0">
-                        <div class="h-px w-8 bg-brand-500 shrink-0"></div>
                         <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-400 whitespace-nowrap">
                             {{ church.name }}
                         </span>
@@ -97,10 +96,10 @@ const mainServiceDay = computed(() => {
                 </div>
 
                 <!-- Massive editorial headline — driven by church.tagline -->
-                <h1 class="font-serif font-normal leading-[0.95] tracking-tight mb-8 reveal reveal-delay-1"
+                <h1 class="font-display leading-[0.95] tracking-tight mb-8 reveal reveal-delay-1"
                     style="font-size: clamp(3rem, 10vw, 8.5rem);">
                     <span v-if="heroHeadline.start" class="block text-white">{{ heroHeadline.start }}</span>
-                    <span class="block gradient-text-light italic">{{ heroHeadline.last }}</span>
+                    <span class="block gradient-text-light">{{ heroHeadline.last }}</span>
                 </h1>
 
                 <!-- Subhead + CTA side-by-side on desktop -->
@@ -131,7 +130,7 @@ const mainServiceDay = computed(() => {
                     <!-- Stats — shown only when configured in Settings → Homepage -->
                     <div v-if="stats.length > 0" class="flex flex-wrap gap-x-8 gap-y-3">
                         <div v-for="stat in stats" :key="stat.label" class="flex items-baseline gap-2">
-                            <span class="font-serif text-xl text-white">{{ stat.value }}</span>
+                            <span class="font-display text-xl text-white">{{ stat.value }}</span>
                             <span class="text-xs text-white/30">{{ stat.label }}</span>
                         </div>
                     </div>
@@ -194,10 +193,9 @@ const mainServiceDay = computed(() => {
                 <div class="grid lg:grid-cols-2 gap-16 items-center">
                     <div class="reveal">
                         <div class="flex items-center gap-3 mb-6">
-                            <div class="h-px w-8 bg-brand-500 shrink-0"></div>
                             <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-400">Community</span>
                         </div>
-                        <h2 class="text-4xl md:text-5xl font-serif font-normal text-white leading-tight mb-6">
+                        <h2 class="text-4xl md:text-5xl font-display text-white leading-tight mb-6">
                             {{ ministryHeading ?? 'Find your place in our community.' }}
                         </h2>
                         <p class="text-white/45 text-lg leading-relaxed mb-8">
@@ -264,7 +262,7 @@ const mainServiceDay = computed(() => {
                     :class="`reveal-delay-${i + 1}`"
                 >
                     <!-- Large quote mark -->
-                    <div class="font-serif text-5xl text-brand-200 leading-none mb-4 select-none" aria-hidden="true">"</div>
+                    <div class="font-display text-5xl text-brand-200 leading-none mb-4 select-none" aria-hidden="true">"</div>
                     <p class="text-neutral-600 leading-relaxed text-sm mb-6">{{ t.text }}</p>
                     <div class="flex items-center gap-3 pt-4 border-t border-neutral-100">
                         <div class="w-9 h-9 rounded-full gradient-brand flex items-center justify-center shrink-0">
@@ -284,7 +282,7 @@ const mainServiceDay = computed(() => {
             <div class="flex items-center justify-between mb-8">
                 <div>
                     <p class="text-sm font-semibold tracking-widest uppercase text-brand-500 mb-1">Stay Informed</p>
-                    <h2 class="text-2xl font-serif font-normal text-neutral-900">Latest Announcements</h2>
+                    <h2 class="text-2xl font-display text-neutral-900">Latest Announcements</h2>
                 </div>
                 <AppButton href="/announcements" variant="ghost" size="sm">
                     View All <ArrowRight class="w-3.5 h-3.5" />
@@ -313,7 +311,7 @@ const mainServiceDay = computed(() => {
                         <span class="w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span>
                         <span class="text-white/60 text-sm">Live Every {{ mainServiceDay }}</span>
                     </div>
-                    <h2 class="text-4xl md:text-5xl font-serif font-normal text-white leading-tight mb-5">
+                    <h2 class="text-4xl md:text-5xl font-display text-white leading-tight mb-5">
                         Can't join us in person?<br />Watch online.
                     </h2>
                     <p class="text-white/40 leading-relaxed mb-8 text-lg">
@@ -343,11 +341,9 @@ const mainServiceDay = computed(() => {
         <SectionWrapper bg="white" centered>
             <div class="max-w-2xl mx-auto">
                 <div class="flex items-center justify-center gap-3 mb-6">
-                    <div class="h-px w-8 bg-brand-200 shrink-0"></div>
                     <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-500">New Here?</span>
-                    <div class="h-px w-8 bg-brand-200 shrink-0"></div>
                 </div>
-                <h2 class="text-4xl md:text-5xl font-serif font-normal text-neutral-900 leading-tight mb-5">
+                <h2 class="text-4xl md:text-5xl font-display text-neutral-900 leading-tight mb-5">
                     We would love to meet you.
                 </h2>
                 <p class="text-lg text-neutral-500 leading-relaxed mb-10">

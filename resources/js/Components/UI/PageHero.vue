@@ -101,12 +101,11 @@ const showFade = computed<boolean>(() =>
         <div class="relative mx-auto max-w-7xl px-6 lg:px-8" :class="paddingMap[size]">
             <!-- Eyebrow -->
             <div v-if="eyebrow" class="flex items-center gap-3 mb-6 reveal">
-                <div class="h-px w-8 bg-brand-500 shrink-0"></div>
                 <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-400">{{ eyebrow }}</span>
             </div>
 
             <!-- Title slot or prop -->
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-serif font-normal text-white leading-tight max-w-3xl reveal reveal-delay-1">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-display text-white leading-tight max-w-3xl reveal reveal-delay-1">
                 <slot name="title">{{ title }}</slot>
             </h1>
 

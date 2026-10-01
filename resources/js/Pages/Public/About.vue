@@ -63,12 +63,11 @@ const heroSubtitle = computed(() => {
             <div :class="values.length > 0 ? 'grid lg:grid-cols-2 gap-16 items-start' : 'max-w-2xl'">
                 <div class="reveal">
                     <div class="flex items-center gap-3 mb-5">
-                        <div class="h-px w-8 bg-brand-500 shrink-0"></div>
                         <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-500">Our Mission</span>
                     </div>
 
                     <!-- Mission statement: DB-driven, fallback to generic -->
-                    <h2 class="text-3xl md:text-4xl font-serif font-normal text-neutral-900 leading-tight mb-6 whitespace-pre-line">
+                    <h2 class="text-3xl md:text-4xl font-display text-neutral-900 leading-tight mb-6 whitespace-pre-line">
                         {{ mission ?? 'Glorifying God and\nserving our community.' }}
                     </h2>
 
@@ -115,7 +114,7 @@ const heroSubtitle = computed(() => {
                     </span>
                 </div>
 
-                <h2 class="text-3xl md:text-4xl font-serif font-normal text-white leading-tight reveal reveal-delay-1">
+                <h2 class="text-3xl md:text-4xl font-display text-white leading-tight reveal reveal-delay-1">
                     {{ vision2028.theme }}
                 </h2>
 
@@ -154,7 +153,7 @@ const heroSubtitle = computed(() => {
 
             <!-- The denomination's own mission statement -->
             <figure class="mt-16 max-w-2xl border-l-2 border-brand-400/70 pl-5 reveal">
-                <blockquote class="font-serif text-lg md:text-xl italic text-white/90 leading-relaxed">
+                <blockquote class="font-display text-lg md:text-xl text-white/90 leading-relaxed">
                     &ldquo;{{ copMission }}&rdquo;
                 </blockquote>
                 <figcaption class="mt-3 text-xs font-semibold tracking-[0.2em] uppercase text-brand-300">
@@ -200,7 +199,7 @@ const heroSubtitle = computed(() => {
         <section class="gradient-dark-mesh relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-500/20 to-transparent" aria-hidden="true"></div>
             <div class="mx-auto max-w-7xl px-6 lg:px-8 py-24 text-center">
-                <h2 class="text-4xl md:text-5xl font-serif font-normal text-white leading-tight mb-5 max-w-xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-display text-white leading-tight mb-5 max-w-xl mx-auto">
                     Ready to become part of the family?
                 </h2>
                 <p class="text-white/45 text-lg mb-8">Visit us this Sunday and experience the community for yourself.</p>

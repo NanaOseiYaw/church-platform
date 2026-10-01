@@ -45,7 +45,7 @@ function submit() {
             </div>
 
             <div class="relative">
-                <h2 class="text-4xl font-serif font-normal text-white leading-tight mb-4">
+                <h2 class="text-4xl font-display text-white leading-tight mb-4">
                     Welcome back to<br />your community.
                 </h2>
                 <p class="text-neutral-400 leading-relaxed">

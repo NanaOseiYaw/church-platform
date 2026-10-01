@@ -94,7 +94,7 @@ function initials(name: string): string {
 
         <SectionWrapper bg="surface" size="sm">
             <div class="max-w-2xl">
-                <h2 class="text-2xl font-serif text-neutral-900">Get in touch with the leadership</h2>
+                <h2 class="text-2xl font-display text-neutral-900">Get in touch with the leadership</h2>
                 <p class="mt-3 text-sm text-neutral-600 leading-relaxed">
                     Whether you are new, looking for prayer, or want to serve — the leadership of
                     {{ church.name }} would be glad to hear from you.

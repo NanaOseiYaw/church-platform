@@ -198,13 +198,12 @@ onBeforeUnmount(() => {
 
             <div class="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 min-h-[calc(100vh-4rem)] flex flex-col justify-center py-20">
                 <div class="flex items-center gap-3 mb-7 reveal">
-                    <span class="h-px w-10 bg-brand-400 shrink-0"></span>
                     <span class="text-xs font-semibold tracking-[0.3em] uppercase text-brand-300">
                         Youth Ministry · {{ church.name }}
                     </span>
                 </div>
 
-                <h1 class="font-serif font-normal text-white leading-[0.95] tracking-tight reveal reveal-delay-1
+                <h1 class="font-display text-white leading-[0.95] tracking-tight reveal reveal-delay-1
                            text-[2.85rem] sm:text-6xl lg:text-[5.75rem] max-w-4xl">
                     A generation fully
                     <span class="block">
@@ -255,10 +254,9 @@ onBeforeUnmount(() => {
                 <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
                     <div class="lg:col-span-5 reveal">
                         <div class="flex items-center gap-3 mb-6">
-                            <span class="h-px w-8 bg-brand-300 shrink-0"></span>
                             <span class="text-xs font-semibold tracking-[0.25em] uppercase text-brand-500">Our mission</span>
                         </div>
-                        <h2 class="font-serif text-4xl sm:text-5xl text-neutral-900 leading-[1.05]">
+                        <h2 class="font-display text-4xl sm:text-5xl text-neutral-900 leading-[1.05]">
                             Raising a generation that
                             <span class="gradient-text italic">lives for more.</span>
                         </h2>
@@ -298,7 +296,7 @@ onBeforeUnmount(() => {
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4">
                     <div v-for="(s, i) in stats" :key="i"
                          class="text-center reveal" :class="`reveal-delay-${Math.min(i + 1, 4)}`">
-                        <div class="font-serif text-5xl sm:text-6xl text-brand-600 leading-none tabular-nums">
+                        <div class="font-display text-5xl sm:text-6xl text-brand-600 leading-none tabular-nums">
                             {{ s.display }}<span class="text-brand-400">{{ s.suffix }}</span>
                         </div>
                         <div class="mt-3 text-sm text-neutral-500 font-medium">{{ s.label }}</div>
@@ -313,10 +311,9 @@ onBeforeUnmount(() => {
                 <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 reveal">
                     <div>
                         <div class="flex items-center gap-3 mb-5">
-                            <span class="h-px w-8 bg-brand-300 shrink-0"></span>
                             <span class="text-xs font-semibold tracking-[0.25em] uppercase text-brand-500">What's on</span>
                         </div>
-                        <h2 class="font-serif text-4xl sm:text-5xl text-neutral-900 leading-tight">Come and be part of it.</h2>
+                        <h2 class="font-display text-4xl sm:text-5xl text-neutral-900 leading-tight">Come and be part of it.</h2>
                     </div>
                     <Link href="/events" class="inline-flex items-center gap-2 text-brand-600 font-semibold hover:text-brand-700 transition-colors shrink-0">
                         View all events <ArrowRight class="w-4 h-4" />
@@ -334,7 +331,7 @@ onBeforeUnmount(() => {
                                 </span>
                                 <span class="text-[11px] font-semibold tracking-[0.18em] uppercase text-white/70">Counting down to</span>
                             </div>
-                            <p class="font-serif text-2xl text-white leading-tight">{{ countdownTitle }}</p>
+                            <p class="font-display text-2xl text-white leading-tight">{{ countdownTitle }}</p>
                         </div>
                         <div class="flex items-center gap-2.5 sm:gap-3">
                             <div v-for="unit in [
@@ -344,7 +341,7 @@ onBeforeUnmount(() => {
                                     { v: countdown.seconds, l: 'Sec' },
                                 ]" :key="unit.l"
                                  class="w-14 sm:w-16 rounded-xl bg-white/10 border border-white/15 px-2 py-2.5 text-center">
-                                <div class="font-serif text-2xl sm:text-3xl text-white tabular-nums leading-none">{{ pad(unit.v) }}</div>
+                                <div class="font-display text-2xl sm:text-3xl text-white tabular-nums leading-none">{{ pad(unit.v) }}</div>
                                 <div class="mt-1 text-[9px] font-semibold tracking-[0.15em] uppercase text-white/55">{{ unit.l }}</div>
                             </div>
                         </div>
@@ -367,10 +364,9 @@ onBeforeUnmount(() => {
                 <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 reveal">
                     <div>
                         <div class="flex items-center gap-3 mb-5">
-                            <span class="h-px w-8 bg-brand-300 shrink-0"></span>
                             <span class="text-xs font-semibold tracking-[0.25em] uppercase text-brand-500">In the moment</span>
                         </div>
-                        <h2 class="font-serif text-4xl sm:text-5xl text-neutral-900 leading-tight">Life, lately.</h2>
+                        <h2 class="font-display text-4xl sm:text-5xl text-neutral-900 leading-tight">Life, lately.</h2>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <button v-for="cat in categories" :key="cat" @click="activeCat = cat"
@@ -407,10 +403,9 @@ onBeforeUnmount(() => {
             <div class="mx-auto max-w-7xl px-6 lg:px-8 py-20 md:py-28">
                 <div class="max-w-2xl mb-12 reveal">
                     <div class="flex items-center gap-3 mb-5">
-                        <span class="h-px w-8 bg-brand-300 shrink-0"></span>
                         <span class="text-xs font-semibold tracking-[0.25em] uppercase text-brand-500">In their words</span>
                     </div>
-                    <h2 class="font-serif text-4xl sm:text-5xl text-neutral-900 leading-tight">Stories from our young people.</h2>
+                    <h2 class="font-display text-4xl sm:text-5xl text-neutral-900 leading-tight">Stories from our young people.</h2>
                 </div>
 
                 <div class="grid md:grid-cols-3 gap-5">
@@ -437,7 +432,7 @@ onBeforeUnmount(() => {
                 <!-- Leader feature quote -->
                 <div class="mt-12 rounded-3xl bg-brand-50 border border-brand-100 p-8 sm:p-12 reveal">
                     <Quote class="w-9 h-9 text-brand-300 mb-5" />
-                    <blockquote class="font-serif text-2xl sm:text-3xl text-neutral-900 leading-snug max-w-3xl">
+                    <blockquote class="font-display text-2xl sm:text-3xl text-neutral-900 leading-snug max-w-3xl">
                         This generation isn't the church of tomorrow. They're
                         <span class="gradient-text italic">the church right now</span> — and they're just getting started.
                     </blockquote>
@@ -461,7 +456,7 @@ onBeforeUnmount(() => {
                     <div class="cta-grid" aria-hidden="true"></div>
                     <div class="relative z-10 max-w-2xl mx-auto reveal">
                         <Sparkles class="w-8 h-8 text-white/85 mx-auto mb-6" />
-                        <h2 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.05] mb-5">
+                        <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.05] mb-5">
                             Your place is already here.
                         </h2>
                         <p class="text-white/85 text-lg leading-relaxed mb-9 max-w-lg mx-auto">

@@ -64,11 +64,9 @@ const colorMap: Record<string, string> = {
         <!-- CTA -->
         <SectionWrapper bg="surface" centered size="sm">
             <div class="flex items-center justify-center gap-3 mb-5">
-                <div class="h-px w-8 bg-brand-200 shrink-0"></div>
                 <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-500">Get Connected</span>
-                <div class="h-px w-8 bg-brand-200 shrink-0"></div>
             </div>
-            <h2 class="text-3xl font-serif font-normal text-neutral-900 mb-4">Not sure where to start?</h2>
+            <h2 class="text-3xl font-display text-neutral-900 mb-4">Not sure where to start?</h2>
             <p class="text-neutral-500 mb-7 max-w-sm mx-auto">Reach out to us and we will help you find the right fit for your season of life.</p>
             <AppButton href="/contact" variant="primary">
                 Get Connected <ArrowRight class="w-4 h-4" />

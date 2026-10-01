@@ -112,7 +112,7 @@ const icons: Record<string, any> = {
 
         <SectionWrapper bg="brand" size="sm">
             <div class="max-w-2xl">
-                <h2 class="text-2xl md:text-3xl font-serif text-white">Find where you belong</h2>
+                <h2 class="text-2xl md:text-3xl font-display text-white">Find where you belong</h2>
                 <p class="mt-3 text-white/70 leading-relaxed">
                     Every one of these values is lived out by ordinary members serving in ordinary ways.
                     There is a place here for you too.

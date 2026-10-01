@@ -90,7 +90,7 @@ const props = defineProps<{
         <!-- Past streams -->
         <SectionWrapper bg="white" v-if="pastStreams.length">
             <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl font-serif font-normal text-neutral-900">Recent Services</h2>
+                <h2 class="text-2xl font-display text-neutral-900">Recent Services</h2>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <article
@@ -121,11 +121,9 @@ const props = defineProps<{
         <!-- Subscribe CTA -->
         <SectionWrapper bg="surface" centered size="sm">
             <div class="flex items-center justify-center gap-3 mb-4">
-                <div class="h-px w-8 bg-brand-200 shrink-0"></div>
                 <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-500">Stay Connected</span>
-                <div class="h-px w-8 bg-brand-200 shrink-0"></div>
             </div>
-            <h2 class="text-3xl font-serif font-normal text-neutral-900 mb-4">Never miss a service</h2>
+            <h2 class="text-3xl font-display text-neutral-900 mb-4">Never miss a service</h2>
             <p class="text-neutral-500 mb-7 max-w-sm mx-auto">Explore our archive of past messages and sermon series.</p>
             <AppButton href="/sermons" variant="primary">Browse Sermon Archive</AppButton>
         </SectionWrapper>

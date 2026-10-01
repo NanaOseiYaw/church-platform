@@ -42,7 +42,7 @@ const { church } = useChurch()
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <div class="lg:col-span-5">
                     <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-600">Where it began</span>
-                    <h2 class="mt-4 text-3xl md:text-4xl font-serif text-neutral-900 leading-tight">
+                    <h2 class="mt-4 text-3xl md:text-4xl font-display text-neutral-900 leading-tight">
                         One missionary, sent in {{ global.founded }}
                     </h2>
                 </div>
@@ -68,19 +68,19 @@ const { church } = useChurch()
 
             <div class="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-px bg-neutral-100 border border-neutral-100 rounded-2xl overflow-hidden">
                 <div class="bg-white p-6">
-                    <p class="text-3xl font-serif text-brand-700 tabular-nums">{{ global.founded }}</p>
+                    <p class="text-3xl font-display text-brand-700 tabular-nums">{{ global.founded }}</p>
                     <p class="mt-1 text-xs text-neutral-500">Founded in the Gold Coast</p>
                 </div>
                 <div class="bg-white p-6">
-                    <p class="text-3xl font-serif text-brand-700 tabular-nums">{{ global.countries }}+</p>
+                    <p class="text-3xl font-display text-brand-700 tabular-nums">{{ global.countries }}+</p>
                     <p class="mt-1 text-xs text-neutral-500">Nations served</p>
                 </div>
                 <div class="bg-white p-6">
-                    <p class="text-3xl font-serif text-brand-700 tabular-nums">{{ global.membership }}</p>
+                    <p class="text-3xl font-display text-brand-700 tabular-nums">{{ global.membership }}</p>
                     <p class="mt-1 text-xs text-neutral-500">Members worldwide</p>
                 </div>
                 <div class="bg-white p-6">
-                    <p class="text-3xl font-serif text-brand-700 tabular-nums">{{ localFounded ?? '—' }}</p>
+                    <p class="text-3xl font-display text-brand-700 tabular-nums">{{ localFounded ?? '—' }}</p>
                     <p class="mt-1 text-xs text-neutral-500">This assembly established</p>
                 </div>
             </div>
@@ -90,7 +90,7 @@ const { church } = useChurch()
         <SectionWrapper bg="surface">
             <div class="max-w-3xl">
                 <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-600">Here in Amsterdam</span>
-                <h2 class="mt-4 text-3xl md:text-4xl font-serif text-neutral-900 leading-tight">
+                <h2 class="mt-4 text-3xl md:text-4xl font-display text-neutral-900 leading-tight">
                     Our story in this city
                 </h2>
                 <p v-if="intro" class="mt-5 text-base text-neutral-600 leading-relaxed">{{ intro }}</p>

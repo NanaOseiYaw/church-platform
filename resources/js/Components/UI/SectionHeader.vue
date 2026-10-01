@@ -14,7 +14,7 @@ withDefaults(defineProps<{
         <p v-if="eyebrow" class="text-sm font-semibold tracking-widest uppercase text-brand-500 mb-3">
             {{ eyebrow }}
         </p>
-        <h2 class="text-3xl md:text-4xl font-serif font-normal text-neutral-900 leading-tight mb-4">
+        <h2 class="text-3xl md:text-4xl font-display text-neutral-900 leading-tight mb-4">
             {{ title }}
         </h2>
         <p v-if="subtitle" class="text-lg text-neutral-500 leading-relaxed">

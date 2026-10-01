@@ -87,7 +87,7 @@ async function startCheckout() {
                 aria-hidden="true"></div>
             <div class="relative mx-auto max-w-7xl px-6 lg:px-8 py-24">
                 <p class="text-sm font-semibold tracking-widest uppercase text-brand-400 mb-3">Generosity</p>
-                <h1 class="text-5xl font-serif font-normal text-white leading-tight max-w-xl mb-4">
+                <h1 class="text-5xl font-display text-white leading-tight max-w-xl mb-4">
                     Give with a joyful heart.
                 </h1>
                 <p class="text-xl text-neutral-400 max-w-lg">

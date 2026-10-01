@@ -53,7 +53,7 @@ function submit() {
         >
             <template #actions>
                 <figure class="max-w-2xl border-l-2 border-brand-400/70 pl-5">
-                    <blockquote class="font-serif text-lg md:text-xl italic text-white/90 leading-relaxed">
+                    <blockquote class="font-display text-lg md:text-xl text-white/90 leading-relaxed">
                         &ldquo;Do not be anxious about anything, but in every situation, by prayer
                         and petition, with thanksgiving, present your requests to God.&rdquo;
                     </blockquote>

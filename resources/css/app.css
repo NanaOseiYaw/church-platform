@@ -8,9 +8,13 @@
 
 /* ── Design system tokens ──────────────────────────────────────────────────── */
 @theme {
-    /* Typography */
-    --font-sans:  'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-serif: 'DM Serif Display', ui-serif, Georgia, serif;
+    /* Typography — one family across the whole site.
+       Bricolage Grotesque is a variable face with an optical-size axis, so the
+       same family draws the 60px hero and the 14px caption with shapes tuned to
+       each, which is why it can carry display and text without a second font.
+       `font-display` and `font-sans` therefore name roles, not families. */
+    --font-sans:    'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
 
     /* Brand palette — Church of Pentecost official blues (overridden at runtime via useBrandColor)
        brand-400 = Light Blue #5AA9E6 (secondary, hover, highlights)
@@ -68,9 +72,26 @@
 html { scroll-behavior: smooth; }
 body {
     font-family: var(--font-sans);
+    font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden; /* prevent any section decoration causing horizontal scroll */
+}
+
+/* Display role. Declared after the Tailwind import so it layers over the
+   generated `.font-display` utility rather than fighting it.
+
+   The weight lives here rather than at each call site: the previous display
+   face had a single weight, so every heading carried `font-normal`, and at 400
+   a grotesque reads thin and uncertain at hero sizes. Setting it once means the
+   headings cannot drift apart from each other.
+
+   Grotesques are drawn with loose default spacing for text sizes, so large type
+   needs the tracking pulled back in by hand; the optical-size axis adjusts the
+   letterforms but not the space between them. */
+.font-display {
+    font-weight: 600;
+    letter-spacing: -0.021em;
 }
 
 /* Dark mode: plain CSS variables for component-level theming (not Tailwind utilities).

@@ -109,7 +109,7 @@ const icons: Record<string, any> = {
 
         <SectionWrapper bg="surface" size="sm">
             <div class="max-w-2xl">
-                <h2 class="text-2xl font-serif text-neutral-900">Want to talk it through?</h2>
+                <h2 class="text-2xl font-display text-neutral-900">Want to talk it through?</h2>
                 <p class="mt-3 text-sm text-neutral-600 leading-relaxed">
                     If anything here raises a question, we would rather have the conversation than leave you
                     guessing. Come and visit, or get in touch — someone from the leadership will be glad to meet you.

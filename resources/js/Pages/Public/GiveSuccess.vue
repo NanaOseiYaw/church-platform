@@ -19,7 +19,7 @@ const { church } = useChurch()
                     <CheckCircle class="w-10 h-10 text-emerald-500" />
                 </div>
 
-                <h1 class="text-3xl font-serif font-normal text-neutral-900 mb-3 leading-tight">
+                <h1 class="text-3xl font-display text-neutral-900 mb-3 leading-tight">
                     Thank you for your generosity!
                 </h1>
 
