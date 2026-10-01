@@ -14,6 +14,15 @@ const props = withDefaults(defineProps<{
      *   null       → force the gradient, ignoring the site-wide image
      */
     image?: string | null
+    /**
+     * The soft fade into the white section below.
+     *
+     * Left undefined it is automatic: ON for the gradient hero, where it blends
+     * two flat colours cleanly, and OFF when a background image is in use, where
+     * it reads as the photo being bleached along its bottom edge rather than as a
+     * deliberate transition. Pass true or false to force either way.
+     */
+    fade?: boolean
 }>(), {
     size: 'md',
 })
@@ -55,6 +64,11 @@ const resolvedImage = computed<string | null>(() => {
 
     return perPageImage.value ?? siteWideImage.value
 })
+
+// Explicit prop wins; otherwise fade only over the flat gradient, never a photo.
+const showFade = computed<boolean>(() =>
+    props.fade !== undefined ? props.fade : !resolvedImage.value
+)
 </script>
 
 <template>
@@ -112,7 +126,11 @@ const resolvedImage = computed<string | null>(() => {
             </div>
         </div>
 
-        <!-- Bottom fade to next section -->
-        <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none" aria-hidden="true"></div>
+        <!-- Bottom fade to next section — suppressed over a photo, see `fade` prop -->
+        <div
+            v-if="showFade"
+            class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"
+            aria-hidden="true"
+        ></div>
     </section>
 </template>
