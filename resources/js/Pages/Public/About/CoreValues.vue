@@ -75,14 +75,20 @@ const icons: Record<string, any> = {
                             />
                         </div>
 
-                        <!-- Fallback until the illustration for this value has been added -->
+                        <!--
+                            Fallback until the illustration for this value has been added.
+                            Deliberately the same 80px box as the image tile: the twelve are
+                            added a few at a time, and a smaller icon tile pushed the heading
+                            of every card without artwork out of line with the ones beside it,
+                            so a half-finished set looked broken rather than unfinished.
+                        -->
                         <div
                             v-else
-                            class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center shrink-0 group-hover:bg-brand-100 transition-colors"
+                            class="w-20 h-20 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center shrink-0 group-hover:bg-brand-100 transition-colors"
                         >
                             <component
                                 :is="icons[value.icon ?? ''] ?? Star"
-                                class="w-5 h-5 text-brand-600"
+                                class="w-8 h-8 text-brand-600"
                                 aria-hidden="true"
                             />
                         </div>

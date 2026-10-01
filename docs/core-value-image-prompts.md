@@ -44,6 +44,43 @@ beside a real heading that already says what it is.
 
 ---
 
+## A third constraint: no two subjects may share a base form
+
+Each of these renders at 80 px beside its own heading, in a grid where cards sit
+directly next to each other. Two subjects built on the same underlying shape —
+say, two circles with a star inside — become the same picture at that size, and
+the pair reads as a mistake even though each one is fine on its own.
+
+Before generating, read the twelve subjects below as a set and check that no two
+start from the same form. If a rewrite is needed, change the one whose symbol is
+the weaker fit, not the stronger one.
+
+---
+
+## What went wrong on the first pass
+
+Three of the original twelve had to be regenerated, and all three failures came
+from the prompt rather than the generator. They are worth knowing because the
+same traps apply to any new subject added later:
+
+- **Church Discipline** asked for a balance scale with "a navy upright and a sky
+  blue crossbeam". A vertical post crossed by a horizontal beam is a crucifix.
+  The image read as a cross, which is both wrong for the value and badly placed
+  theologically. Now specified as a hanging balance with no upright at all.
+- **Holiness** asked for a gold star on a navy disc while **Leadership** asked
+  for a compass rose — a star on a navy disc. Side by side in the grid, at
+  05 and 06, they were the same tile twice. Holiness was rewritten; the compass
+  rose was kept, because it is the stronger symbol of the two.
+- **Discipleship** asked for "rounded stepping stones rising in a staircase",
+  which the generator read as an invitation to draw three-dimensional blocks in
+  perspective. The style block now forbids perspective outright, and the subject
+  asks for flat footprints seen from above.
+
+The pattern: describe the shape precisely enough that a wrong reading is not
+available, and say what you do **not** want when a near-miss is plausible.
+
+---
+
 ## STYLE BLOCK
 
 > Prepend verbatim to each subject below.
@@ -56,8 +93,10 @@ filling most of the square frame — confident and graphic, not delicate.
 Strictly limited palette: deep navy blue (#1E5AA8) and light sky blue (#5AA9E6)
 as the primary colours, with warm gold (#F2C94C) as a single small accent, all
 on a very light cool off-white background (#F5F8FC). Even lighting, no grain,
-no outlines, no drop shadows, no fine detail or thin lines. The feel of a
-premium app icon set — restrained and modern, not clipart, not stock
+no outlines, no drop shadows, no fine detail or thin lines. Strictly flat and
+two-dimensional: no perspective, no isometric or three-quarter views, no
+extruded or boxy depth, no cast shadows — every shape is seen square on. The
+feel of a premium app icon set — restrained and modern, not clipart, not stock
 photography, not cartoon, not 3D render. Absolutely no text, letters, numbers
 or symbols of language. No human faces and no depiction of any divine figure.
 1:1 square aspect ratio, subject centred with a small even margin.
@@ -76,9 +115,10 @@ Bold and graphic, like a signal going out.
 
 ### 02 — Discipleship
 ```
-SUBJECT: Three rounded stepping stones rising in a staircase from lower left to
-upper right, the lowest in deep navy and each one lighter than the last, with a
-single small gold dot resting on the highest. Following, step by step.
+SUBJECT: Three large footprint shapes in a diagonal line rising towards the
+upper right, drawn as simple solid silhouettes with no toe detail, seen from
+directly above. The first deep navy, the second sky blue, the third warm gold.
+Completely flat — no boxes, no blocks, no perspective, no shading.
 ```
 
 ### 03 — The Holy Spirit
@@ -103,9 +143,10 @@ across it, the northward point in warm gold. Geometric and symmetrical.
 
 ### 06 — Holiness
 ```
-SUBJECT: A solid deep navy disc with a clean eight-pointed gold star centred on
-it, and a thin sky blue ring just inside the disc's edge. Set apart, bright,
-unfussy.
+SUBJECT: A solid deep navy rectangular block seen square on, with one clean
+horizontal segment lifted clear of it and floating just above, that lifted
+segment in warm gold with a sky blue edge. Set apart — literally separated out
+and raised. Two shapes only, flat, no perspective.
 ```
 
 ### 07 — Consistent Bible Teaching
@@ -117,9 +158,10 @@ emerging from the lower edge. Flat and graphic — no pages, no perspective.
 
 ### 08 — Church Discipline
 ```
-SUBJECT: A balance scale, perfectly level — a navy upright with a sky blue
-crossbeam and two simple shallow pans hanging evenly, with a small gold pivot
-where the beam meets the upright. Bold shapes, no chains or fine lines.
+SUBJECT: A hanging balance, perfectly level — a thick horizontal sky blue beam
+suspended from a small warm gold ring at the top, with a shallow deep navy pan
+joined to each end of the beam by a short thick stem. There is NO vertical post,
+upright, stand or column of any kind. Bold shapes, no chains, no thin lines.
 ```
 
 ### 09 — Tithes & Offerings
