@@ -22,7 +22,6 @@ interface Settings {
     team:                TeamMember[]
     values:              ChurchValue[]
     hero_title:          string | null
-    hero_eyebrow:        string | null
     hero_subtitle:       string | null
     leadership_subtitle: string | null
 }
@@ -35,7 +34,6 @@ const form = useForm({
     team:                props.settings.team.map(m => ({ ...m })) as TeamMember[],
     values:              props.settings.values.map(v => ({ ...v })) as ChurchValue[],
     hero_title:          props.settings.hero_title          ?? '',
-    hero_eyebrow:        props.settings.hero_eyebrow        ?? '',
     hero_subtitle:       props.settings.hero_subtitle       ?? '',
     leadership_subtitle: props.settings.leadership_subtitle ?? '',
 })
@@ -91,14 +89,6 @@ function submit() {
                     </p>
                 </div>
                 <div class="p-5 space-y-4">
-                    <AppInput
-                        id="hero_eyebrow"
-                        v-model="form.hero_eyebrow"
-                        label="Hero eyebrow"
-                        placeholder="Our Story"
-                        hint="Small label above the main heading (default: Our Story)"
-                        :error="(form.errors as any).hero_eyebrow"
-                    />
                     <AppInput
                         id="hero_title"
                         v-model="form.hero_title"

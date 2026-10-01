@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 
 const props = withDefaults(defineProps<{
-    eyebrow?: string
     title:    string
     subtitle?: string
     size?:    'sm' | 'md' | 'lg'
@@ -99,11 +98,6 @@ const showFade = computed<boolean>(() =>
         <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-500/30 to-transparent" aria-hidden="true"></div>
 
         <div class="relative mx-auto max-w-7xl px-6 lg:px-8" :class="paddingMap[size]">
-            <!-- Eyebrow -->
-            <div v-if="eyebrow" class="flex items-center gap-3 mb-6 reveal">
-                <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-400">{{ eyebrow }}</span>
-            </div>
-
             <!-- Title slot or prop -->
             <h1 class="text-4xl sm:text-5xl md:text-6xl font-display text-white leading-tight max-w-3xl reveal reveal-delay-1">
                 <slot name="title">{{ title }}</slot>

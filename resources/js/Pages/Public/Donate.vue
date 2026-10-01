@@ -86,7 +86,6 @@ async function startCheckout() {
                 style="background: radial-gradient(ellipse 60% 60% at 20% 50%, rgba(30,90,168,0.6) 0%, transparent 70%);"
                 aria-hidden="true"></div>
             <div class="relative mx-auto max-w-7xl px-6 lg:px-8 py-24">
-                <p class="text-sm font-semibold tracking-widest uppercase text-brand-400 mb-3">Generosity</p>
                 <h1 class="text-5xl font-display text-white leading-tight max-w-xl mb-4">
                     Give with a joyful heart.
                 </h1>

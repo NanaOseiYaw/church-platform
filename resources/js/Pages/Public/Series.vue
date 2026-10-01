@@ -35,7 +35,6 @@ function dateRange(item: { started_at: string | null; ended_at: string | null })
         <!-- ── Dark hero header ──────────────────────────────────────────────── -->
         <div class="bg-neutral-950 text-white">
             <div class="mx-auto max-w-7xl px-6 lg:px-8 pt-20 pb-12">
-                <p class="text-xs font-bold tracking-[0.2em] uppercase text-brand-400 mb-3">Teaching Series</p>
                 <h1 class="text-4xl md:text-5xl font-display text-white leading-tight mb-4">
                     Sermon Series
                 </h1>

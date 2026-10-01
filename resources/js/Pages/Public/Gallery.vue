@@ -25,7 +25,6 @@ const { church } = useChurch()
         :description="`Photos and memories from ${church?.name ?? 'our church community'}.`"
     >
         <PageHero
-            eyebrow="Gallery"
             :title="`Our Church in Photos`"
             :description="`A glimpse into the life and ministry of ${church?.name ?? 'our church'}.`"
         />

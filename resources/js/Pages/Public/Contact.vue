@@ -35,7 +35,6 @@ function submit() {
     <PublicLayout title="Contact" :description="`Get in touch with ${church.name}.`">
 
         <PageHero
-            eyebrow="Say Hello"
             title="Get in Touch"
             subtitle="We would love to hear from you. Reach out with questions, prayer requests, or to plan your first visit."
         />

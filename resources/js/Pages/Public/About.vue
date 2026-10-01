@@ -28,7 +28,6 @@ const props = defineProps<{
     team:                 TeamMember[]
     values:               ChurchValue[]
     heroTitle:            string | null
-    heroEyebrow:          string | null
     heroSubtitleOverride: string | null
     leadershipSubtitle:   string | null
     copMission:           string
@@ -51,7 +50,6 @@ const heroSubtitle = computed(() => {
     >
 
         <PageHero
-            :eyebrow="heroEyebrow ?? 'About Us'"
             :title="heroTitle ?? 'Mission & Vision'"
             :subtitle="heroSubtitle"
         />
@@ -62,9 +60,6 @@ const heroSubtitle = computed(() => {
         <SectionWrapper bg="white">
             <div :class="values.length > 0 ? 'grid lg:grid-cols-2 gap-16 items-start' : 'max-w-2xl'">
                 <div class="reveal">
-                    <div class="flex items-center gap-3 mb-5">
-                        <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-500">Our Mission</span>
-                    </div>
 
                     <!-- Mission statement: DB-driven, fallback to generic -->
                     <h2 class="text-3xl md:text-4xl font-display text-neutral-900 leading-tight mb-6 whitespace-pre-line">
@@ -105,14 +100,10 @@ const heroSubtitle = computed(() => {
         -->
         <SectionWrapper bg="dark">
             <div class="max-w-3xl">
-                <div class="flex flex-wrap items-center gap-3 mb-6 reveal">
-                    <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-400">
-                        {{ vision2028.title }}
-                    </span>
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-white/10 text-[11px] font-medium text-white/70 tabular-nums">
-                        {{ vision2028.period }}
-                    </span>
-                </div>
+                <p class="mb-5 text-sm font-semibold text-brand-300 reveal">
+                    {{ vision2028.title }}
+                    <span class="ml-2 font-normal text-white/40 tabular-nums">{{ vision2028.period }}</span>
+                </p>
 
                 <h2 class="text-3xl md:text-4xl font-display text-white leading-tight reveal reveal-delay-1">
                     {{ vision2028.theme }}
@@ -165,7 +156,6 @@ const heroSubtitle = computed(() => {
         <!-- Leadership team — hidden when empty so churches without team data don't see a blank section -->
         <SectionWrapper v-if="team.length > 0" bg="surface">
             <SectionHeader
-                eyebrow="Leadership"
                 title="Meet our team."
                 :subtitle="leadershipSubtitle ?? 'Meet the leaders who serve our community.'"
             />

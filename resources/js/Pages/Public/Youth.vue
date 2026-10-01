@@ -197,11 +197,6 @@ onBeforeUnmount(() => {
             <div class="hero-grid" aria-hidden="true"></div>
 
             <div class="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 min-h-[calc(100vh-4rem)] flex flex-col justify-center py-20">
-                <div class="flex items-center gap-3 mb-7 reveal">
-                    <span class="text-xs font-semibold tracking-[0.3em] uppercase text-brand-300">
-                        Youth Ministry · {{ church.name }}
-                    </span>
-                </div>
 
                 <h1 class="font-display text-white leading-[0.95] tracking-tight reveal reveal-delay-1
                            text-[2.85rem] sm:text-6xl lg:text-[5.75rem] max-w-4xl">
@@ -253,9 +248,6 @@ onBeforeUnmount(() => {
             <div class="mx-auto max-w-7xl px-6 lg:px-8 py-20 md:py-28">
                 <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
                     <div class="lg:col-span-5 reveal">
-                        <div class="flex items-center gap-3 mb-6">
-                            <span class="text-xs font-semibold tracking-[0.25em] uppercase text-brand-500">Our mission</span>
-                        </div>
                         <h2 class="font-display text-4xl sm:text-5xl text-neutral-900 leading-[1.05]">
                             Raising a generation that
                             <span class="gradient-text italic">lives for more.</span>
@@ -310,9 +302,6 @@ onBeforeUnmount(() => {
             <div class="mx-auto max-w-7xl px-6 lg:px-8 py-20 md:py-28">
                 <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 reveal">
                     <div>
-                        <div class="flex items-center gap-3 mb-5">
-                            <span class="text-xs font-semibold tracking-[0.25em] uppercase text-brand-500">What's on</span>
-                        </div>
                         <h2 class="font-display text-4xl sm:text-5xl text-neutral-900 leading-tight">Come and be part of it.</h2>
                     </div>
                     <Link href="/events" class="inline-flex items-center gap-2 text-brand-600 font-semibold hover:text-brand-700 transition-colors shrink-0">
@@ -363,9 +352,6 @@ onBeforeUnmount(() => {
             <div class="mx-auto max-w-7xl px-6 lg:px-8 py-20 md:py-28">
                 <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 reveal">
                     <div>
-                        <div class="flex items-center gap-3 mb-5">
-                            <span class="text-xs font-semibold tracking-[0.25em] uppercase text-brand-500">In the moment</span>
-                        </div>
                         <h2 class="font-display text-4xl sm:text-5xl text-neutral-900 leading-tight">Life, lately.</h2>
                     </div>
                     <div class="flex flex-wrap gap-2">
@@ -402,9 +388,6 @@ onBeforeUnmount(() => {
         <section class="bg-white">
             <div class="mx-auto max-w-7xl px-6 lg:px-8 py-20 md:py-28">
                 <div class="max-w-2xl mb-12 reveal">
-                    <div class="flex items-center gap-3 mb-5">
-                        <span class="text-xs font-semibold tracking-[0.25em] uppercase text-brand-500">In their words</span>
-                    </div>
                     <h2 class="font-display text-4xl sm:text-5xl text-neutral-900 leading-tight">Stories from our young people.</h2>
                 </div>
 

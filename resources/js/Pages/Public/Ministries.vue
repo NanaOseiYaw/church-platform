@@ -27,7 +27,6 @@ const colorMap: Record<string, string> = {
     <PublicLayout title="Ministries" :description="`Explore our ministries and find where you belong at ${church.name}.`">
 
         <PageHero
-            eyebrow="Community"
             title="Our Ministries"
             subtitle="Every person has a place here. Find the ministry that is made for you."
         />
@@ -63,9 +62,6 @@ const colorMap: Record<string, string> = {
 
         <!-- CTA -->
         <SectionWrapper bg="surface" centered size="sm">
-            <div class="flex items-center justify-center gap-3 mb-5">
-                <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-500">Get Connected</span>
-            </div>
             <h2 class="text-3xl font-display text-neutral-900 mb-4">Not sure where to start?</h2>
             <p class="text-neutral-500 mb-7 max-w-sm mx-auto">Reach out to us and we will help you find the right fit for your season of life.</p>
             <AppButton href="/contact" variant="primary">

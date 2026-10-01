@@ -120,9 +120,6 @@ const props = defineProps<{
 
         <!-- Subscribe CTA -->
         <SectionWrapper bg="surface" centered size="sm">
-            <div class="flex items-center justify-center gap-3 mb-4">
-                <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-500">Stay Connected</span>
-            </div>
             <h2 class="text-3xl font-display text-neutral-900 mb-4">Never miss a service</h2>
             <p class="text-neutral-500 mb-7 max-w-sm mx-auto">Explore our archive of past messages and sermon series.</p>
             <AppButton href="/sermons" variant="primary">Browse Sermon Archive</AppButton>
