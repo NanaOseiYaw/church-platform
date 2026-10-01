@@ -10,7 +10,7 @@ import {
     BookMarked, Scale, HandCoins, HeartHandshake, Church, Star,
 } from 'lucide-vue-next'
 
-interface CoreValue { title: string; body: string; refs?: string; icon?: string }
+interface CoreValue { title: string; body: string; refs?: string; icon?: string; image?: string }
 
 defineProps<{ values: CoreValue[] }>()
 
@@ -54,7 +54,32 @@ const icons: Record<string, any> = {
                     :class="`reveal-delay-${Math.min(i + 1, 4)}`"
                 >
                     <div class="flex items-center gap-3 mb-5">
-                        <div class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center shrink-0 group-hover:bg-brand-100 transition-colors">
+                        <!--
+                            The illustration replaces the icon in the same tile rather than
+                            taking a banner across the card, which is deliberately unlike the
+                            Beliefs page: these twelve entries are text-forward, and a banner
+                            on each would double the length of the page and make the two
+                            pages look like the same page twice.
+                        -->
+                        <div
+                            v-if="value.image"
+                            class="w-20 h-20 rounded-xl bg-brand-50/60 border border-brand-100 overflow-hidden shrink-0"
+                        >
+                            <img
+                                :src="value.image"
+                                :alt="''"
+                                class="w-full h-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                                aria-hidden="true"
+                            />
+                        </div>
+
+                        <!-- Fallback until the illustration for this value has been added -->
+                        <div
+                            v-else
+                            class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center shrink-0 group-hover:bg-brand-100 transition-colors"
+                        >
                             <component
                                 :is="icons[value.icon ?? ''] ?? Star"
                                 class="w-5 h-5 text-brand-600"

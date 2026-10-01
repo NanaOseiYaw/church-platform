@@ -38,13 +38,21 @@ class AboutController extends Controller
         return [];
     }
 
+    /**
+     * Deliberately empty.
+     *
+     * This used to return four invented values — Faith, Community, Service,
+     * Growth — which read as placeholder text and, worse, sat one click away
+     * from /about/core-values, where the twelve real values of The Church of
+     * Pentecost are listed. Two different answers to the same question on the
+     * same site is worse than one answer.
+     *
+     * The values grid hides itself when this is empty and the mission column
+     * takes the full width, so an admin who genuinely wants a short values
+     * summary here can still add one under Settings → About Page.
+     */
     private function defaultValues(): array
     {
-        return [
-            ['title' => 'Faith',     'description' => 'Rooted in scripture, we live and grow by faith in Jesus Christ.'],
-            ['title' => 'Community', 'description' => 'We believe life is better together — deeply connected and accountable.'],
-            ['title' => 'Service',   'description' => 'We serve our city and world with humility and compassion.'],
-            ['title' => 'Growth',    'description' => 'We pursue spiritual maturity through teaching, prayer, and community.'],
-        ];
+        return [];
     }
 }

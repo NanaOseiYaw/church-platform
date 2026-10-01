@@ -70,10 +70,10 @@ class AboutPagesController extends Controller
     /**
      * Drop the `image` key for any illustration that has not been added yet.
      *
-     * The page falls back to the tenet's icon when there is no image, so the
-     * artwork can be added one file at a time instead of all eleven at once —
-     * and a missing or misnamed file degrades to the icon rather than rendering
-     * a broken image.
+     * Used by both Beliefs and Core Values. Each page falls back to the item's
+     * icon when there is no image, so the artwork can be added one file at a
+     * time instead of all at once — and a missing or misnamed file degrades to
+     * the icon rather than rendering a broken image.
      */
     private function withExistingImages(array $items): array
     {
@@ -90,7 +90,7 @@ class AboutPagesController extends Controller
     public function coreValues(): Response
     {
         return Inertia::render('Public/About/CoreValues', [
-            'values' => config('cop.core_values', []),
+            'values' => $this->withExistingImages(config('cop.core_values', [])),
         ]);
     }
 
