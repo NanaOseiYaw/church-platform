@@ -26,6 +26,72 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Mission
+    |--------------------------------------------------------------------------
+    | The denomination's own mission statement, quoted from the Vision 2028
+    | document. An assembly does not author this, so it lives here rather than
+    | in the church record — unlike the local `vision`/`mission` fields on the
+    | Church model, which describe this particular assembly.
+    */
+    'mission' => 'To establish responsible and self-sustaining churches filled with '
+               . 'committed, Spirit-filled Christians of character who will impact their communities.',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Vision 2028
+    |--------------------------------------------------------------------------
+    | Phase 2 of the Possessing the Nations agenda, covering 2023–2028 and
+    | following Vision 2023 (2018–2023). Source: the Vision 2028 document.
+    */
+    'vision_2028' => [
+        'title'  => 'Vision 2028',
+        'period' => '2023 – 2028',
+        'theme'  => 'Unleashing the Whole Church for the Transformation of their World '
+                  . 'with the Values and Principles of the Kingdom of God',
+        'slogans' => [
+            'Possessing the nations: I am an agent of transformation!',
+            'Possessing the nations: Transforming my world!',
+        ],
+        'aspiration' => 'The Church of Pentecost will strive to become a Church whose members go '
+                      . 'to possess or take their nations by influencing every worldview, thought '
+                      . 'and behaviour with Kingdom principles, values and lifestyle, thereby '
+                      . 'turning many people to Christ.',
+        'context' => 'Vision 2023 — the first phase of the Possessing the Nations agenda — focused on '
+                   . 'equipping the members of the Church. Vision 2028 is the second phase, and turns '
+                   . 'to unleashing those equipped members into the world as agents of transformation, '
+                   . 'so that the Great Commission is fulfilled.',
+        'approaches' => [
+            [
+                'number' => '01',
+                'title'  => 'Strengthening the local church',
+                'body'   => 'Repositioning every local assembly as a nurturing and unleashing centre — through '
+                          . 'intentional discipleship, mentorship, an intergenerational approach, and care for '
+                          . 'marriage and family life.',
+            ],
+            [
+                'number' => '02',
+                'title'  => 'Unleashing the Church to transform society',
+                'body'   => 'Evangelism and church planting, international and home missions, ministry in the '
+                          . 'digital space, chaplaincy, and reaching groups the Church has not yet reached.',
+            ],
+            [
+                'number' => '03',
+                'title'  => 'Harnessing our social ministry',
+                'body'   => 'Meeting real physical needs — health, education, water and sanitation, '
+                          . 'entrepreneurial development, community transformation and advocacy — so that '
+                          . 'righteousness spreads through the structures of society, not only its individuals.',
+            ],
+            [
+                'number' => '04',
+                'title'  => 'Strengthening systems and institutions',
+                'body'   => 'Aligning the departments, ministries, boards and training institutions of the '
+                          . 'Church so they provide the enabling environment for the vision to be carried out.',
+            ],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | The Tenets of the Church
     |--------------------------------------------------------------------------
     | The eleven tenets are the denomination's formal statement of faith.

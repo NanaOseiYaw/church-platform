@@ -29,10 +29,13 @@ const allNavLinks: NavLink[] = [
         label: 'About',
         href:  '/about',
         children: [
-            { slug: 'leadership',  label: 'Leadership',       href: '/about/leadership',  description: 'Meet the leadership of the assembly' },
-            { slug: 'history',     label: 'Our History',      href: '/about/history',     description: 'From 1937 in the Gold Coast to today' },
+            // 'overview' is the /about page itself. It is never gated — it always has
+            // content — so it is listed first, as a sibling of the other sections.
+            { slug: 'overview',    label: 'Mission & Vision', href: '/about',             description: 'Who we are and where we are going' },
             { slug: 'beliefs',     label: 'Beliefs & Tenets', href: '/about/beliefs',     description: 'The eleven tenets of the Church' },
             { slug: 'core-values', label: 'Core Values',      href: '/about/core-values', description: 'What shapes how we serve' },
+            { slug: 'leadership',  label: 'Leadership',       href: '/about/leadership',  description: 'Meet the leadership of the assembly' },
+            { slug: 'history',     label: 'Our History',      href: '/about/history',     description: 'From 1937 in the Gold Coast to today' },
         ],
     },
     { label: 'Ministries',    href: '/ministries' },

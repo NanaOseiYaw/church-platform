@@ -4,10 +4,21 @@ import SectionWrapper from '@/Components/UI/SectionWrapper.vue'
 import SectionHeader from '@/Components/UI/SectionHeader.vue'
 import PageHero from '@/Components/UI/PageHero.vue'
 import AppButton from '@/Components/UI/AppButton.vue'
+import AboutSubnav from '@/Components/Public/AboutSubnav.vue'
 import { useChurch } from '@/composables/useChurch'
 import type { TeamMember, ChurchValue } from '@/types'
 import { ArrowRight, User } from 'lucide-vue-next'
 import { computed } from 'vue'
+
+interface Vision2028 {
+    title:      string
+    period:     string
+    theme:      string
+    slogans:    string[]
+    aspiration: string
+    context:    string
+    approaches: { number: string; title: string; body: string }[]
+}
 
 const props = defineProps<{
     mission:              string | null
@@ -20,6 +31,8 @@ const props = defineProps<{
     heroEyebrow:          string | null
     heroSubtitleOverride: string | null
     leadershipSubtitle:   string | null
+    copMission:           string
+    vision2028:           Vision2028
 }>()
 
 const { church } = useChurch()
@@ -38,10 +51,12 @@ const heroSubtitle = computed(() => {
     >
 
         <PageHero
-            :eyebrow="heroEyebrow ?? 'Our Story'"
-            :title="heroTitle ?? church.name"
+            :eyebrow="heroEyebrow ?? 'About Us'"
+            :title="heroTitle ?? 'Mission & Vision'"
             :subtitle="heroSubtitle"
         />
+
+        <AboutSubnav />
 
         <!-- Mission + Values -->
         <SectionWrapper bg="white">
@@ -82,6 +97,70 @@ const heroSubtitle = computed(() => {
                     </div>
                 </div>
             </div>
+        </SectionWrapper>
+
+        <!--
+            Vision 2028 — the denomination's current five-year agenda, shared by
+            every assembly worldwide. Content comes from config/cop.php rather than
+            this church's record, because no local assembly authors it.
+        -->
+        <SectionWrapper bg="dark">
+            <div class="max-w-3xl">
+                <div class="flex flex-wrap items-center gap-3 mb-6 reveal">
+                    <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-400">
+                        {{ vision2028.title }}
+                    </span>
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-white/10 text-[11px] font-medium text-white/70 tabular-nums">
+                        {{ vision2028.period }}
+                    </span>
+                </div>
+
+                <h2 class="text-3xl md:text-4xl font-serif font-normal text-white leading-tight reveal reveal-delay-1">
+                    {{ vision2028.theme }}
+                </h2>
+
+                <p class="mt-6 text-base text-white/70 leading-relaxed reveal reveal-delay-2">
+                    {{ vision2028.aspiration }}
+                </p>
+                <p class="mt-4 text-sm text-white/50 leading-relaxed reveal reveal-delay-2">
+                    {{ vision2028.context }}
+                </p>
+
+                <!-- Slogans -->
+                <ul class="mt-8 flex flex-wrap gap-2.5 reveal reveal-delay-3">
+                    <li
+                        v-for="slogan in vision2028.slogans"
+                        :key="slogan"
+                        class="inline-flex items-center rounded-lg border border-brand-400/30 bg-brand-500/10 px-3.5 py-2 text-sm text-brand-200"
+                    >
+                        {{ slogan }}
+                    </li>
+                </ul>
+            </div>
+
+            <!-- The four strategic approaches -->
+            <ol class="mt-14 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+                <li
+                    v-for="(approach, i) in vision2028.approaches"
+                    :key="approach.number"
+                    class="reveal border-t border-white/10 pt-6"
+                    :class="`reveal-delay-${Math.min(i + 1, 4)}`"
+                >
+                    <span class="text-xs font-semibold tabular-nums text-brand-400">{{ approach.number }}</span>
+                    <h3 class="mt-2 text-lg font-semibold text-white tracking-tight">{{ approach.title }}</h3>
+                    <p class="mt-2 text-sm text-white/60 leading-relaxed">{{ approach.body }}</p>
+                </li>
+            </ol>
+
+            <!-- The denomination's own mission statement -->
+            <figure class="mt-16 max-w-2xl border-l-2 border-brand-400/70 pl-5 reveal">
+                <blockquote class="font-serif text-lg md:text-xl italic text-white/90 leading-relaxed">
+                    &ldquo;{{ copMission }}&rdquo;
+                </blockquote>
+                <figcaption class="mt-3 text-xs font-semibold tracking-[0.2em] uppercase text-brand-300">
+                    Mission of The Church of Pentecost
+                </figcaption>
+            </figure>
         </SectionWrapper>
 
         <!-- Leadership team — hidden when empty so churches without team data don't see a blank section -->

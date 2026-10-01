@@ -20,8 +20,12 @@ use App\Models\Church;
  */
 final class AboutPages
 {
-    /** Pages that are always available — content comes from config, not the DB. */
-    private const ALWAYS_READY = ['beliefs', 'core-values'];
+    /**
+     * Always available. 'overview' is the /about page itself — the assembly's
+     * mission and vision — which always has content. The other two are
+     * denomination-wide content shipped in config/cop.php.
+     */
+    private const ALWAYS_READY = ['overview', 'beliefs', 'core-values'];
 
     /** Pages gated on local content existing, mapped to their settings key. */
     private const GATED = [

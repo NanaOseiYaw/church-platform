@@ -50,12 +50,18 @@ class AboutPagesVisibilityTest extends TestCase
 
     // ── Always-public pages ───────────────────────────────────────────────────
 
-    public function test_beliefs_and_core_values_are_always_public(): void
+    public function test_overview_beliefs_and_core_values_are_always_public(): void
     {
+        $this->get('/about')->assertOk();
         $this->get('/about/beliefs')->assertOk();
         $this->get('/about/core-values')->assertOk();
 
-        $this->assertEqualsCanonicalizing(['beliefs', 'core-values'], $this->sharedAboutPages());
+        // 'overview' is the /about page itself — the assembly's mission and vision.
+        // It is never gated because it always has content.
+        $this->assertEqualsCanonicalizing(
+            ['overview', 'beliefs', 'core-values'],
+            $this->sharedAboutPages()
+        );
     }
 
     // ── Gated pages, empty ────────────────────────────────────────────────────

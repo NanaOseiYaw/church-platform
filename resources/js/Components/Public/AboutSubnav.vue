@@ -8,7 +8,10 @@ import { Link, usePage } from '@inertiajs/vue3'
  * Mirrors the structure used across Church of Pentecost national sites.
  */
 const allLinks = [
-    { slug: 'overview',    label: 'Overview',         href: '/about' },
+    // The /about page is the assembly's mission and vision, so it is labelled for
+    // what it contains rather than as a generic "Overview". Always shown — unlike
+    // the gated sub-pages, it has real content on every install.
+    { slug: 'overview',    label: 'Mission & Vision', href: '/about' },
     { slug: 'leadership',  label: 'Leadership',       href: '/about/leadership' },
     { slug: 'history',     label: 'Our History',      href: '/about/history' },
     { slug: 'beliefs',     label: 'Beliefs & Tenets', href: '/about/beliefs' },
