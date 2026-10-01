@@ -79,6 +79,21 @@ same traps apply to any new subject added later:
 The pattern: describe the shape precisely enough that a wrong reading is not
 available, and say what you do **not** want when a near-miss is plausible.
 
+Holiness then took two further attempts, and the reason is worth keeping:
+
+- A navy block with a gold bar lifted above it was accurate but read as a piece
+  of user interface.
+- Five bars with the middle one raised and gold read as a bar chart. That prompt
+  also contradicted itself — it asked for bars "standing on a common baseline"
+  **and** for one "lifted clear above the line", so the generator split the
+  difference and neither idea landed.
+
+What finally worked was abandoning abstract geometry for a recognisable object.
+**Every tile in this set that works is a thing** — a megaphone, a book, a gem, a
+compass, a flame, a bowl, a balance, a building, footprints. The two that failed
+were pure shapes. When a value resists an obvious object, keep looking for one
+rather than retreating into rectangles.
+
 ---
 
 ## STYLE BLOCK
@@ -143,10 +158,11 @@ across it, the northward point in warm gold. Geometric and symmetrical.
 
 ### 06 — Holiness
 ```
-SUBJECT: A solid deep navy rectangular block seen square on, with one clean
-horizontal segment lifted clear of it and floating just above, that lifted
-segment in warm gold with a sky blue edge. Set apart — literally separated out
-and raised. Two shapes only, flat, no perspective.
+SUBJECT: A tall narrow jar with a wide flat rim and a gently tapering body,
+standing upright, in deep navy, seen square on. The inside of its mouth and a
+clean band around the rim are warm gold, as though the jar is holding light.
+No handles, no stem, no base plinth, no contents, no lid. One object, centred,
+filling most of the frame.
 ```
 
 ### 07 — Consistent Bible Teaching
