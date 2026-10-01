@@ -63,8 +63,27 @@ class AboutPagesController extends Controller
     public function beliefs(): Response
     {
         return Inertia::render('Public/About/Beliefs', [
-            'tenets' => config('cop.tenets', []),
+            'tenets' => $this->withExistingImages(config('cop.tenets', [])),
         ]);
+    }
+
+    /**
+     * Drop the `image` key for any illustration that has not been added yet.
+     *
+     * The page falls back to the tenet's icon when there is no image, so the
+     * artwork can be added one file at a time instead of all eleven at once —
+     * and a missing or misnamed file degrades to the icon rather than rendering
+     * a broken image.
+     */
+    private function withExistingImages(array $items): array
+    {
+        return array_map(function (array $item) {
+            if (! empty($item['image']) && ! file_exists(public_path(ltrim($item['image'], '/')))) {
+                unset($item['image']);
+            }
+
+            return $item;
+        }, $items);
     }
 
     /** GET /about/core-values */

@@ -10,7 +10,7 @@ import {
     Flame, HeartPulse, HandCoins, CloudLightning, Users,
 } from 'lucide-vue-next'
 
-interface Tenet { title: string; body: string; refs?: string; icon?: string }
+interface Tenet { title: string; body: string; refs?: string; icon?: string; image?: string }
 
 defineProps<{ tenets: Tenet[] }>()
 
@@ -46,39 +46,62 @@ const icons: Record<string, any> = {
                 </p>
             </div>
 
-            <ol class="mt-14 grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-2">
+            <!--
+                Cards rather than a list, because an illustration needs its own
+                band to breathe. A tenet with no image yet falls back to the icon
+                treatment, so the artwork can land one file at a time without the
+                page looking half-finished.
+            -->
+            <ol class="mt-14 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 <li
                     v-for="(tenet, i) in tenets"
                     :key="tenet.title"
-                    class="reveal border-t border-neutral-100 py-7 first:border-t-0 lg:first:border-t lg:[&:nth-child(2)]:border-t-0"
+                    class="reveal group flex flex-col bg-white border border-neutral-100 rounded-2xl overflow-hidden hover:shadow-elevated hover:-translate-y-1 transition-all duration-300"
                     :class="`reveal-delay-${Math.min(i + 1, 4)}`"
                 >
-                    <div class="flex items-start gap-4">
-                        <!-- Icon chip carries the number, so the illustration and the
-                             ordinal share one element instead of competing for space. -->
-                        <div class="shrink-0 flex flex-col items-center gap-1.5">
-                            <div class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center">
-                                <component
-                                    :is="icons[tenet.icon ?? ''] ?? BookOpen"
-                                    class="w-5 h-5 text-brand-600"
-                                    aria-hidden="true"
-                                />
-                            </div>
-                            <span class="text-[10px] font-semibold tabular-nums text-neutral-400">
-                                {{ String(i + 1).padStart(2, '0') }}
-                            </span>
-                        </div>
-                        <div class="min-w-0 pt-1.5">
-                            <h2 class="text-lg font-semibold text-neutral-900 tracking-tight">
-                                {{ tenet.title }}
-                            </h2>
-                            <p class="mt-2 text-sm text-neutral-600 leading-relaxed">
-                                {{ tenet.body }}
-                            </p>
-                            <p v-if="tenet.refs" class="mt-3 text-xs text-neutral-400 leading-relaxed">
-                                {{ tenet.refs }}
-                            </p>
-                        </div>
+                    <!-- Illustration -->
+                    <div
+                        v-if="tenet.image"
+                        class="relative aspect-[3/2] bg-brand-50/40 overflow-hidden"
+                    >
+                        <img
+                            :src="tenet.image"
+                            :alt="''"
+                            class="w-full h-full object-cover"
+                            loading="lazy"
+                            decoding="async"
+                            aria-hidden="true"
+                        />
+                        <span class="absolute top-3 left-3 inline-flex items-center justify-center min-w-[1.75rem] h-7 px-2 rounded-lg bg-white/90 backdrop-blur-sm text-[11px] font-semibold tabular-nums text-brand-700 shadow-sm">
+                            {{ String(i + 1).padStart(2, '0') }}
+                        </span>
+                    </div>
+
+                    <!-- Fallback when the illustration has not been added yet -->
+                    <div
+                        v-else
+                        class="relative aspect-[3/2] bg-brand-50/60 border-b border-brand-100/60 flex items-center justify-center"
+                    >
+                        <component
+                            :is="icons[tenet.icon ?? ''] ?? BookOpen"
+                            class="w-10 h-10 text-brand-400"
+                            aria-hidden="true"
+                        />
+                        <span class="absolute top-3 left-3 inline-flex items-center justify-center min-w-[1.75rem] h-7 px-2 rounded-lg bg-white/90 text-[11px] font-semibold tabular-nums text-brand-700 shadow-sm">
+                            {{ String(i + 1).padStart(2, '0') }}
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col flex-1 p-6">
+                        <h2 class="text-lg font-semibold text-neutral-900 tracking-tight group-hover:text-brand-700 transition-colors">
+                            {{ tenet.title }}
+                        </h2>
+                        <p class="mt-2 text-sm text-neutral-600 leading-relaxed flex-1">
+                            {{ tenet.body }}
+                        </p>
+                        <p v-if="tenet.refs" class="mt-4 pt-3 border-t border-neutral-50 text-xs text-neutral-400 leading-relaxed">
+                            {{ tenet.refs }}
+                        </p>
                     </div>
                 </li>
             </ol>

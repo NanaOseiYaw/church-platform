@@ -195,9 +195,12 @@ REDIS_HOST=127.0.0.1
 REDIS_PASSWORD=null
 REDIS_PORT=6379
 
-MAIL_MAILER=mailgun                       # see Step 12
-MAILGUN_DOMAIN=mg.copamsterdam.nl
-MAILGUN_SECRET=                            # see Step 12
+MAIL_MAILER=smtp                           # see Step 12 — mailgun is NOT available in this app
+MAIL_HOST=
+MAIL_PORT=587
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=noreply@copamsterdam.nl
 MAIL_FROM_NAME="Church of Pentecost Amsterdam"
 
@@ -364,31 +367,41 @@ After every deploy, Forge's deploy script (Step 7.2) already includes `queue:res
 
 Your app sends: password reset links, RSVP confirmations, task/announcement/event notifications, and contact-form/prayer-request confirmations. `MAIL_MAILER=log` (dev default) writes emails to a log file instead of sending them — **this must change for production.**
 
-**Recommended: Mailgun** (already the default in your existing `DEPLOYMENT.md`, so nothing to relearn).
+> **Correction (2026-09-30).** An earlier version of this step recommended Mailgun.
+> That was written from the generic Laravel docs, not from this codebase. **Mailgun
+> is not usable here without extra work**: Laravel removed it from the default mail
+> config, so there is no `mailgun` block in `config/mail.php` and no transport
+> package installed. Setting `MAIL_MAILER=mailgun` fails.
+>
+> The mailers actually defined in `config/mail.php` are `smtp`, `ses`, `postmark`,
+> `resend`, `sendmail`, `log`, `array`, `failover` and `roundrobin` — and of those,
+> only **`smtp`** works with no additional package, because it is part of
+> `symfony/mailer` which is already installed.
 
-1. Create a Mailgun account at `https://www.mailgun.com` (paid beyond a small free tier — confirm before adding a card).
-2. Add domain `mg.copamsterdam.nl` as a sending subdomain (using a subdomain, not the bare domain, is Mailgun's recommended practice — keeps your root domain's reputation isolated from bulk mail).
-3. Mailgun shows you DNS records to add — go back to **TransIP → copamsterdam.nl → DNS** and add them:
+**Recommended: SMTP.** It needs no new packages and no code change, and every
+provider (Postmark, Resend, Brevo, SMTP2GO, Mailgun, Fastmail …) issues SMTP
+credentials — so the choice of provider stays reversible.
+
+1. Create an account with a transactional email provider and verify
+   `copamsterdam.nl` as a sending domain. The provider will give you an SMTP
+   host, port, username and password, plus DNS records.
+2. Add the provider's DNS records at **TransIP → copamsterdam.nl → DNS**:
 
 | Type | Host | Purpose |
 |---|---|---|
-| TXT | `mg` | **SPF** — declares Mailgun is allowed to send as `mg.copamsterdam.nl` |
-| TXT | `smtp._domainkey.mg` (exact name given by Mailgun) | **DKIM** — cryptographically signs outgoing mail |
-| MX | `mg` | Lets Mailgun receive bounces/replies for that subdomain |
-| CNAME | `email.mg` | Mailgun's click/open tracking domain |
+| TXT | `@` | **SPF** — must include the provider's mechanism (see warning below) |
+| TXT | provider-specified, e.g. `s1._domainkey` | **DKIM** — signs outgoing mail |
+| TXT | `_dmarc` | **DMARC** — start at `p=none`, tighten later |
 
-4. Once Mailgun verifies the DNS records (can take a few hours), copy the **API key** and **domain** into your Forge environment variables (`MAILGUN_SECRET`, `MAILGUN_DOMAIN`) from Step 7.3, then redeploy or run `php artisan config:cache` over SSH.
-5. Optionally add a **DMARC** record for extra deliverability/anti-spoofing protection:
+> **Important — the existing SPF record blocks all sending.** `copamsterdam.nl`
+> currently publishes `v=spf1 ~all`, which authorises *no* sender. It must be
+> replaced (not duplicated — a domain may publish only one SPF record) with one
+> that includes the provider, e.g. `v=spf1 include:spf.example-provider.com ~all`.
 
-| Type | Host | Value |
-|---|---|---|
-| TXT | `_dmarc` | `v=DMARC1; p=quarantine; rua=mailto:admin@copamsterdam.nl` |
-
-6. **Test it** over SSH:
-   ```bash
-   php artisan tinker
-   >>> Mail::raw('Test email', fn($m) => $m->to('your-real-email@example.com')->subject('COP Amsterdam test'));
-   ```
+3. Put the credentials in `/var/www/copam/.env`, then re-cache config (see below).
+4. **Test delivery** over SSH — see the verification command in this guide's
+   companion notes, which reports the actual transport error rather than failing
+   silently.
 
 ---
 
@@ -487,7 +500,7 @@ Same pattern for `www.copamsterdam.nl → copamsterdam.nl`, on the primary site'
 - [ ] SSL certificates issued and auto-renewing for all four hostnames (Step 9)
 - [ ] HTTP → HTTPS redirect confirmed
 - [ ] `www` → apex and `.org` → `.nl` redirects live (Step 16)
-- [ ] Mailgun configured, SPF/DKIM verified, test email received (Step 12)
+- [ ] SMTP provider configured, existing `v=spf1 ~all` replaced, DKIM verified, test email received (Step 12)
 - [ ] Scheduler cron active, queue worker daemon running, Reverb daemon running (Step 11)
 - [ ] Backups configured and one manual backup verified to actually restore (Step 13)
 - [ ] Sitemap/robots verified live, Search Console property added (Step 14)
