@@ -15,7 +15,12 @@ const mobileOpen = ref(false)
 // Scroll only adds a shadow for elevation — the brand-600 background is always solid
 const scrolled   = ref(false)
 
-interface NavChild { label: string; href: string; slug: string; description?: string }
+/**
+ * A `slug` marks a child whose visibility the server decides — currently only
+ * the About sub-pages, which stay hidden until an admin fills them in. Children
+ * without one are always shown.
+ */
+interface NavChild { label: string; href: string; slug?: string; description?: string }
 interface NavLink  { label: string; href: string; children?: NavChild[] }
 
 // Sub-pages that are not yet filled in are omitted by the server (see
@@ -40,8 +45,16 @@ const allNavLinks: NavLink[] = [
     },
     { label: 'Ministries',    href: '/ministries' },
     { label: 'Events',        href: '/events' },
-    { label: 'Sermons',       href: '/sermons' },
-    { label: 'Series',        href: '/series' },
+    {
+        label: 'Sermons',
+        href:  '/sermons',
+        children: [
+            // As with About, the first child is the parent page itself, so the
+            // group's own destination is reachable from inside the menu too.
+            { label: 'All Sermons', href: '/sermons', description: 'The full library, most recent first' },
+            { label: 'Series',      href: '/series',  description: 'Messages grouped into teaching series' },
+        ],
+    },
     { label: 'Gallery',       href: '/gallery' },
     { label: 'Announcements', href: '/announcements' },
     { label: 'Prayer',        href: '/prayer' },
@@ -54,7 +67,7 @@ const navLinks = computed<NavLink[]>(() =>
     allNavLinks.map((link) => {
         if (!link.children) return link
 
-        const children = link.children.filter(c => readyAboutPages.value.includes(c.slug))
+        const children = link.children.filter(c => !c.slug || readyAboutPages.value.includes(c.slug))
 
         return children.length ? { ...link, children } : { label: link.label, href: link.href }
     })
