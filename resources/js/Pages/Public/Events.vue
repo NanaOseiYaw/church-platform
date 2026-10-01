@@ -28,6 +28,7 @@ const filtered = computed(() =>
     <PublicLayout title="Events" :description="`Upcoming events and gatherings at ${church.name}.`">
 
         <PageHero
+            eyebrow="Calendar"
             title="Upcoming Events"
             subtitle="Something is always happening here. Join us for worship, community, growth, and service."
         />

@@ -30,6 +30,7 @@ const { church } = useChurch()
         :description="`The story of The Church of Pentecost, from its founding in 1937, through to ${church.name} today.`"
     >
         <PageHero
+            eyebrow="About Us"
             title="Our History"
             subtitle="A church that began with one missionary in the Gold Coast, and now serves in more than 200 nations."
         />
@@ -40,7 +41,8 @@ const { church } = useChurch()
         <SectionWrapper bg="white">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <div class="lg:col-span-5">
-                    <h2 class="text-3xl md:text-4xl font-display text-neutral-900 leading-tight">
+                    <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-600">Where it began</span>
+                    <h2 class="mt-4 text-3xl md:text-4xl font-display text-neutral-900 leading-tight">
                         One missionary, sent in {{ global.founded }}
                     </h2>
                 </div>
@@ -87,7 +89,8 @@ const { church } = useChurch()
         <!-- ── The local story ────────────────────────────────────────────────── -->
         <SectionWrapper bg="surface">
             <div class="max-w-3xl">
-                <h2 class="text-3xl md:text-4xl font-display text-neutral-900 leading-tight">
+                <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-600">Here in Amsterdam</span>
+                <h2 class="mt-4 text-3xl md:text-4xl font-display text-neutral-900 leading-tight">
                     Our story in this city
                 </h2>
                 <p v-if="intro" class="mt-5 text-base text-neutral-600 leading-relaxed">{{ intro }}</p>

@@ -27,6 +27,7 @@ class AboutController extends Controller
             'team'                 => $aboutSettings['team']   ?? $this->defaultTeam(),
             'values'               => $aboutSettings['values'] ?? $this->defaultValues(),
             'heroTitle'            => $aboutSettings['hero_title']          ?? null,
+            'heroEyebrow'          => $aboutSettings['hero_eyebrow']        ?? null,
             'heroSubtitleOverride' => $aboutSettings['hero_subtitle']       ?? null,
             'leadershipSubtitle'   => $aboutSettings['leadership_subtitle'] ?? null,
         ]);

@@ -30,6 +30,7 @@ const icons: Record<string, any> = {
         :description="`The eleven tenets of The Church of Pentecost — the statement of faith held by ${church.name} and every assembly worldwide.`"
     >
         <PageHero
+            eyebrow="About Us"
             title="What We Believe"
             subtitle="The eleven tenets of The Church of Pentecost — held in common by every assembly of the Church worldwide."
         />

@@ -26,6 +26,7 @@ function initials(name: string): string {
         :description="`Meet the leadership of ${church.name}.`"
     >
         <PageHero
+            eyebrow="About Us"
             title="Our Leadership"
             subtitle="The men and women who shepherd this assembly and serve its ministries."
         />

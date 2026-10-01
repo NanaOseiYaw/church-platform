@@ -1143,6 +1143,7 @@ class ChurchSettingsController extends Controller
                 'team'                => $settings['team']                ?? [],
                 'values'              => $settings['values']              ?? [],
                 'hero_title'          => $settings['hero_title']          ?? null,
+                'hero_eyebrow'        => $settings['hero_eyebrow']        ?? null,
                 'hero_subtitle'       => $settings['hero_subtitle']       ?? null,
                 'leadership_subtitle' => $settings['leadership_subtitle'] ?? null,
             ],
@@ -1164,6 +1165,7 @@ class ChurchSettingsController extends Controller
             'values.*.title'        => ['required', 'string', 'max:60'],
             'values.*.description'  => ['nullable', 'string', 'max:300'],
             'hero_title'          => ['nullable', 'string', 'max:120'],
+            'hero_eyebrow'        => ['nullable', 'string', 'max:60'],
             'hero_subtitle'       => ['nullable', 'string', 'max:300'],
             'leadership_subtitle' => ['nullable', 'string', 'max:200'],
         ]);
@@ -1172,6 +1174,7 @@ class ChurchSettingsController extends Controller
             'team'                => $validated['team']                ?? [],
             'values'              => $validated['values']              ?? [],
             'hero_title'          => $validated['hero_title']          ?? null,
+            'hero_eyebrow'        => $validated['hero_eyebrow']        ?? null,
             'hero_subtitle'       => $validated['hero_subtitle']       ?? null,
             'leadership_subtitle' => $validated['leadership_subtitle'] ?? null,
         ]);

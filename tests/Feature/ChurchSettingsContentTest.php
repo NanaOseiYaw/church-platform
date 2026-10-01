@@ -63,13 +63,9 @@ class ChurchSettingsContentTest extends TestCase
 
         $church->refresh();
         $this->assertSame('Grace Church',              $church->settings['about']['hero_title']);
+        $this->assertSame('Our Journey',               $church->settings['about']['hero_eyebrow']);
         $this->assertSame('A community growing in faith.', $church->settings['about']['hero_subtitle']);
         $this->assertSame('Serving with humility.',    $church->settings['about']['leadership_subtitle']);
-
-        // The About hero no longer renders a label above its heading, so the
-        // setting that fed one was removed. Still posted above to prove an
-        // unknown key is dropped rather than written through to settings.
-        $this->assertArrayNotHasKey('hero_eyebrow', $church->settings['about']);
     }
 
     public function test_suggested_amounts_reject_non_integers(): void

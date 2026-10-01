@@ -82,18 +82,17 @@ const mainServiceDay = computed(() => {
             -->
             <div class="relative z-10 mx-auto w-full max-w-7xl px-6 lg:px-8 flex-1 flex flex-col justify-center pt-28 pb-12">
 
-                <!--
-                    The chip was one of two things in this row; with the label beside
-                    it gone, the condition moves to the row itself, or an empty flex
-                    box keeps its bottom margin and opens a gap above the headline on
-                    every site without a livestream.
-                -->
-                <div
-                    v-if="props.hasLivestream && sectionVisibility.livestream"
-                    class="mb-8 reveal inline-flex items-center gap-2 self-start bg-white/5 border border-white/10 rounded-full px-3.5 py-1.5"
-                >
-                    <span class="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse shrink-0"></span>
-                    <span class="text-xs text-white/50 whitespace-nowrap">Live every {{ mainServiceDay }}</span>
+                <!-- Eyebrow + live chip row -->
+                <div class="flex flex-wrap items-center gap-4 md:gap-8 mb-8 reveal">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-400 whitespace-nowrap">
+                            {{ church.name }}
+                        </span>
+                    </div>
+                    <div v-if="props.hasLivestream && sectionVisibility.livestream" class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3.5 py-1.5 shrink-0">
+                        <span class="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse shrink-0"></span>
+                        <span class="text-xs text-white/50 whitespace-nowrap">Live every {{ mainServiceDay }}</span>
+                    </div>
                 </div>
 
                 <!-- Massive editorial headline — driven by church.tagline -->
@@ -166,6 +165,7 @@ const mainServiceDay = computed(() => {
         <!-- ── Featured Events ────────────────────────────────────────────────── -->
         <SectionWrapper v-if="featuredEvents.length > 0 && sectionVisibility.events" bg="white">
             <SectionHeader
+                eyebrow="What's On"
                 title="Upcoming Events"
                 :subtitle="eventsSubtitle ?? 'Join us for worship, community, and service. There is always something happening.'"
             />
@@ -192,6 +192,9 @@ const mainServiceDay = computed(() => {
             <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
                 <div class="grid lg:grid-cols-2 gap-16 items-center">
                     <div class="reveal">
+                        <div class="flex items-center gap-3 mb-6">
+                            <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-400">Community</span>
+                        </div>
                         <h2 class="text-4xl md:text-5xl font-display text-white leading-tight mb-6">
                             {{ ministryHeading ?? 'Find your place in our community.' }}
                         </h2>
@@ -222,6 +225,7 @@ const mainServiceDay = computed(() => {
         <!-- ── Latest Sermons ──────────────────────────────────────────────────── -->
         <SectionWrapper v-if="latestSermons.length > 0 && sectionVisibility.sermons" bg="surface">
             <SectionHeader
+                eyebrow="Messages"
                 title="Recent Sermons"
                 :subtitle="sermonsSubtitle ?? 'Grow in faith with teaching that is rooted in scripture and relevant to your life.'"
             />
@@ -245,6 +249,7 @@ const mainServiceDay = computed(() => {
         <!-- ── Testimonials — hidden until admin adds some via Settings → Homepage ── -->
         <SectionWrapper v-if="testimonials.length > 0 && sectionVisibility.testimonials" bg="white" centered>
             <SectionHeader
+                eyebrow="Community Stories"
                 title="Lives being changed."
                 :subtitle="testimonialsSubtitle ?? 'Hear from people whose lives have been transformed by faith and community.'"
                 centered
@@ -276,6 +281,7 @@ const mainServiceDay = computed(() => {
         <SectionWrapper v-if="announcements.length > 0 && sectionVisibility.announcements" bg="surface" size="sm">
             <div class="flex items-center justify-between mb-8">
                 <div>
+                    <p class="text-sm font-semibold tracking-widest uppercase text-brand-500 mb-1">Stay Informed</p>
                     <h2 class="text-2xl font-display text-neutral-900">Latest Announcements</h2>
                 </div>
                 <AppButton href="/announcements" variant="ghost" size="sm">
@@ -334,6 +340,9 @@ const mainServiceDay = computed(() => {
         <!-- ── Final CTA ──────────────────────────────────────────────────────── -->
         <SectionWrapper bg="white" centered>
             <div class="max-w-2xl mx-auto">
+                <div class="flex items-center justify-center gap-3 mb-6">
+                    <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-500">New Here?</span>
+                </div>
                 <h2 class="text-4xl md:text-5xl font-display text-neutral-900 leading-tight mb-5">
                     We would love to meet you.
                 </h2>

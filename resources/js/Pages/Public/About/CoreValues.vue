@@ -30,6 +30,7 @@ const icons: Record<string, any> = {
         :description="`The core values of The Church of Pentecost — what shapes the way ${church.name} worships, serves and grows.`"
     >
         <PageHero
+            eyebrow="About Us"
             title="Our Core Values"
             subtitle="The convictions that shape how we worship, how we serve, and how we treat one another."
         />

@@ -30,6 +30,7 @@ const categoryColors: Record<string, any> = {
     <PublicLayout title="Announcements" :description="`Stay up to date with what's happening at ${church.name}.`">
 
         <PageHero
+            eyebrow="Church News"
             title="Announcements"
             subtitle="Stay informed about everything happening in our community."
         />

@@ -37,6 +37,7 @@ const uniqueSeries = computed(() => {
     <PublicLayout title="Sermons" :description="`Browse our library of sermons and teaching series at ${church.name}.`">
 
         <PageHero
+            eyebrow="Teaching Library"
             title="Sermons & Series"
             :subtitle="sermonsSubtitle ?? 'Deep, scripture-rooted teaching to strengthen your faith and equip you for daily life.'"
         />

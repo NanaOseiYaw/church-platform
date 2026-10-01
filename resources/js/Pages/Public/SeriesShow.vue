@@ -53,6 +53,7 @@ function dateRange(item: { started_at: string | null; ended_at: string | null })
                     All series
                 </Link>
 
+                <p class="text-xs font-bold tracking-[0.2em] uppercase text-brand-400 mb-3">Teaching Series</p>
                 <h1 class="text-4xl md:text-5xl font-display text-white leading-tight mb-4">
                     {{ series.title }}
                 </h1>

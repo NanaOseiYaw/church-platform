@@ -47,6 +47,7 @@ function submit() {
             site-wide default and then to the brand gradient.
         -->
         <PageHero
+            eyebrow="Prayer"
             title="Submit a Prayer Request"
             subtitle="We believe in the power of prayer. Share your request and our community will pray with you."
         >
