@@ -14,15 +14,6 @@ const props = withDefaults(defineProps<{
      *   null       → force the gradient, ignoring the site-wide image
      */
     image?: string | null
-    /**
-     * The soft fade into the white section below.
-     *
-     * Left undefined it is automatic: ON for the gradient hero, where it blends
-     * two flat colours cleanly, and OFF when a background image is in use, where
-     * it reads as the photo being bleached along its bottom edge rather than as a
-     * deliberate transition. Pass true or false to force either way.
-     */
-    fade?: boolean
 }>(), {
     size: 'md',
 })
@@ -65,10 +56,6 @@ const resolvedImage = computed<string | null>(() => {
     return perPageImage.value ?? siteWideImage.value
 })
 
-// Explicit prop wins; otherwise fade only over the flat gradient, never a photo.
-const showFade = computed<boolean>(() =>
-    props.fade !== undefined ? props.fade : !resolvedImage.value
-)
 </script>
 
 <template>
@@ -125,11 +112,27 @@ const showFade = computed<boolean>(() =>
             </div>
         </div>
 
-        <!-- Bottom fade to next section — suppressed over a photo, see `fade` prop -->
-        <div
-            v-if="showFade"
-            class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"
-            aria-hidden="true"
-        ></div>
+        <!--
+            Content that continues on the hero's dark ground, such as a featured
+            item. It lives inside the section rather than in a dark block placed
+            after it: the background glows are positioned relative to their own
+            box, so two adjacent dark blocks each paint their own pattern and a
+            visible step appears where one ends and the next begins.
+        -->
+        <div v-if="$slots.below" class="relative mx-auto max-w-7xl px-6 lg:px-8 pb-16">
+            <slot name="below" />
+        </div>
+
+        <!--
+            No fade into the section below, deliberately. A fade from near-black to
+            white has to pass through flat mid-grey, which reads as a band of smoke
+            across the bottom of the hero however long or eased it is. A longer,
+            eased version was tried and was worse: it greyed out whatever content
+            sat lowest in the hero. The clean edge is the transition.
+
+            (The `fade` prop that used to control this never worked: Vue casts an
+            absent optional boolean prop to `false`, not `undefined`, so the
+            "automatic" branch was unreachable and no hero ever drew a fade.)
+        -->
     </section>
 </template>

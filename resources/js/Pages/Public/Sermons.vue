@@ -40,15 +40,12 @@ const uniqueSeries = computed(() => {
             eyebrow="Teaching Library"
             title="Sermons"
             :subtitle="sermonsSubtitle ?? 'Deep, scripture-rooted teaching to strengthen your faith and equip you for daily life.'"
-        />
-
-        <!-- Featured sermon — dark continuation -->
-        <div v-if="featured" class="gradient-dark-mesh relative">
-            <div class="mx-auto max-w-7xl px-6 lg:px-8 pb-12">
+        >
+            <!-- Featured sermon, on the hero's own background so there is no seam -->
+            <template v-if="featured" #below>
                 <FeaturedSermonHero :sermon="featured" />
-            </div>
-            <div class="h-24 bg-gradient-to-t from-white to-transparent"></div>
-        </div>
+            </template>
+        </PageHero>
 
         <!-- Sermon library -->
         <SectionWrapper bg="white">

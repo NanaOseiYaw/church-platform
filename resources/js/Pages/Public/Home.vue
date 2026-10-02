@@ -75,11 +75,8 @@ const mainServiceDay = computed(() => {
             <!-- Dark overlay for legibility when hero image is set -->
             <div v-if="props.heroImage" class="absolute inset-0 bg-black/55 pointer-events-none" aria-hidden="true"></div>
 
-            <!--
-                z-10 keeps this above the bottom fade-to-white. Without it the fade
-                is later in the DOM at the same stacking level and paints over the
-                content, washing out the service times that sit lowest in the hero.
-            -->
+            <!-- z-10 keeps the content above the image overlay and any future
+                 decoration layered into the hero. -->
             <div class="relative z-10 mx-auto w-full max-w-7xl px-6 lg:px-8 flex-1 flex flex-col justify-center pt-28 pb-12">
 
                 <!-- Eyebrow + live chip row -->
@@ -138,7 +135,7 @@ const mainServiceDay = computed(() => {
                         Service times. This is practical information a visitor is
                         actively looking for, so it is sized and weighted to be read
                         rather than treated as decoration. Contrast is set for the
-                        worst case — a light hero photo behind the bottom fade.
+                        worst case — a light hero photo behind the scrim.
                     -->
                     <div class="flex flex-wrap items-center gap-x-6 gap-y-2.5">
                         <div
@@ -158,8 +155,6 @@ const mainServiceDay = computed(() => {
                 </div>
             </div>
 
-            <!-- Fade to next section -->
-            <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent pointer-events-none" aria-hidden="true"></div>
         </section>
 
         <!-- ── Featured Events ────────────────────────────────────────────────── -->
@@ -219,7 +214,6 @@ const mainServiceDay = computed(() => {
                     </div>
                 </div>
             </div>
-            <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-neutral-50 to-transparent pointer-events-none" aria-hidden="true"></div>
         </section>
 
         <!-- ── Latest Sermons ──────────────────────────────────────────────────── -->

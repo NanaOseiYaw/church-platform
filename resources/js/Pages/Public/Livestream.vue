@@ -83,8 +83,6 @@ const props = defineProps<{
                 </div>
             </div>
 
-            <!-- Fade -->
-            <div class="h-20 bg-gradient-to-t from-white to-transparent shrink-0"></div>
         </section>
 
         <!-- Past streams -->
