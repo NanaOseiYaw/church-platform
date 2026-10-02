@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import {
     Mic2, Search, Play, Headphones, Clock, Star,
-    ChevronRight, Youtube, Trash2, Plus,
+    ChevronRight, Youtube, Trash2, Plus, Layers,
 } from 'lucide-vue-next'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import AppButton from '@/Components/UI/AppButton.vue'
@@ -134,6 +134,22 @@ function vBadge(s: DashboardSermon) {
                 >
                     <Plus class="w-4 h-4" />
                     Add Sermon
+                </AppButton>
+                <!--
+                    The series page existed with no way to reach it, so the
+                    Series dropdown on the sermon form could never be filled.
+                    Gated on canEdit (sermons.edit) because that is what the
+                    series page itself checks; canManage is sermons.upload and
+                    would show the button to people the page then turns away.
+                -->
+                <AppButton
+                    v-if="canEdit"
+                    href="/dashboard/sermons/series"
+                    variant="outline"
+                    size="sm"
+                >
+                    <Layers class="w-4 h-4" />
+                    Series
                 </AppButton>
                 <AppButton
                     v-if="canManageChannels"

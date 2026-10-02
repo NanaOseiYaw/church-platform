@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
+import { useAuthStore } from '@/stores/useAuthStore'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import AppInput from '@/Components/UI/AppInput.vue'
 import AppTextarea from '@/Components/UI/AppTextarea.vue'
@@ -15,6 +16,8 @@ const props = defineProps<{
     seriesList: SermonSeries[]
     speakers:   string[]
 }>()
+
+const auth = useAuthStore()
 
 // ── Form ───────────────────────────────────────────────────────────────────────
 
@@ -131,7 +134,19 @@ function submit() {
 
                     <!-- Series -->
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-sm font-medium text-neutral-700">Series</label>
+                        <!-- The link is here because this dropdown is where people get stuck:
+                             it only lists series that already exist. Same permission as
+                             the series page itself, so it never leads to a 403. -->
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-neutral-700">Series</label>
+                            <a
+                                v-if="auth.can('sermons.edit')"
+                                href="/dashboard/sermons/series"
+                                class="text-xs font-medium text-brand-600 hover:text-brand-700"
+                            >
+                                Manage series
+                            </a>
+                        </div>
                         <select
                             v-model="form.series_id"
                             class="w-full px-3.5 py-2.5 text-sm bg-white border border-neutral-200 rounded-lg text-neutral-900 focus:outline-none focus:border-brand-400 focus:ring-3 focus:ring-brand-500/10"
