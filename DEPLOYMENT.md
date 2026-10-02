@@ -300,7 +300,7 @@ server {
     location = /favicon.ico { log_not_found off; access_log off; }
     location = /robots.txt  { log_not_found off; access_log off; }
 
-    client_max_body_size 10M;   # allow up to 10 MB file uploads
+    client_max_body_size 55M;   # must be >= PHP post_max_size — see "Upload limits" below
 }
 ```
 
@@ -310,6 +310,38 @@ sudo ln -s /etc/nginx/sites-available/church-platform /etc/nginx/sites-enabled/
 sudo nginx -t   # verify config
 sudo systemctl reload nginx
 ```
+
+### Upload limits — PHP must match the app
+
+Three layers each cap an upload, and the smallest one wins:
+
+| Layer | Setting | Value |
+|---|---|---|
+| The app | largest validation rule (media library) | 50 MB |
+| PHP-FPM | `upload_max_filesize` / `post_max_size` | `50M` / `55M` |
+| nginx | `client_max_body_size` | `55M` |
+
+**Ubuntu ships PHP with `upload_max_filesize = 2M`.** Left at that, every
+upload over 2 MB fails even though the app allows far more — phone photos to
+the gallery, header images, the homepage hero video. The live server ran like
+this until 2026-10-02. Files between 2 and 8 MB fail with a vague "failed to
+upload"; above `post_max_size` the request is dropped and an error page shows.
+
+`post_max_size` is set above `upload_max_filesize` because the request also
+carries the form's other fields, and nginx is set to match `post_max_size` so a
+file right at the 50 MB limit is not refused by the proxy for that overhead.
+`max_input_time` is raised so a large upload on a slow connection is not cut
+off after PHP's default 60 seconds.
+
+```bash
+sudo sed -i -E 's/^upload_max_filesize = .*/upload_max_filesize = 50M/; s/^post_max_size = .*/post_max_size = 55M/; s/^max_input_time = .*/max_input_time = 300/' /etc/php/8.3/fpm/php.ini
+sudo systemctl restart php8.3-fpm
+
+# Verify (prints 50M / 55M):
+php -c /etc/php/8.3/fpm/php.ini -r 'echo ini_get("upload_max_filesize"), " / ", ini_get("post_max_size"), PHP_EOL;'
+```
+
+If you raise the app's largest upload rule, raise all three layers with it.
 
 ---
 
