@@ -11,7 +11,14 @@ defineProps<{ sermon: PublicSermon }>()
         class="group block relative overflow-hidden rounded-2xl"
     >
         <!-- Background image / gradient -->
-        <div class="relative aspect-[16/7] sm:aspect-[16/6] lg:aspect-[16/5] min-h-[280px] overflow-hidden">
+        <!--
+            w-full is load-bearing. With an aspect ratio and a min-height, the
+            browser carries the 280px minimum height through the ratio into a
+            minimum width (280 x 16/7 = 640px), so on a phone the card was laid
+            out twice as wide as the screen and the right half was clipped. A
+            definite width stops that transfer.
+        -->
+        <div class="relative w-full aspect-[16/7] sm:aspect-[16/6] lg:aspect-[16/5] min-h-[280px] overflow-hidden">
             <img
                 v-if="sermon.thumbnail"
                 :src="sermon.thumbnail"
