@@ -12,6 +12,7 @@ use App\Models\Event;
 use App\Models\File;
 use App\Models\User;
 use App\Support\PageHeroes;
+use App\Support\PublicUploads;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -210,10 +211,12 @@ class ChurchSettingsController extends Controller
 
         // Store and build a publicly-accessible URL.
         // Run `php artisan storage:link` once on the server if not already done.
+        $old  = $church->logo;
         $path = $request->file('logo')->store('logos', 'public');
         $url  = Storage::disk('public')->url($path);
 
         $church->update(['logo' => $url]);
+        $this->discardReplacedImage($old, $url, 'logos');
         $this->auditSettings($request, 'settings.branding.logo.uploaded', [], ['logo' => $url]);
 
         return back()->with('success', 'Logo uploaded.');
@@ -227,10 +230,12 @@ class ChurchSettingsController extends Controller
             'hero_image' => ['required', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
         ]);
 
+        $old  = $this->getSettings('homepage')['hero_image'] ?? null;
         $path = $request->file('hero_image')->store('hero-images', 'public');
         $url  = Storage::disk('public')->url($path);
 
         $this->saveSettings('homepage', ['hero_image' => $url]);
+        $this->discardReplacedImage($old, $url, 'hero-images');
 
         return back()->with('success', 'Hero image uploaded.');
     }
@@ -325,14 +330,70 @@ class ChurchSettingsController extends Controller
         $path = $request->file('page_hero_image')->store('hero-images', 'public');
         $url  = Storage::disk('public')->url($path);
         $page = $validated['page'] ?? null;
+        $old  = $this->readHeroImage($page);
 
         $this->writeHeroImage($page, $url);
+        $this->discardReplacedImage($old, $url, 'hero-images');
         $this->auditSettings($request, 'settings.website.page_hero_image.uploaded', [], [
             'page'  => $page ?? 'default',
             'image' => $url,
         ]);
 
         return back()->with('success', 'Header image uploaded.');
+    }
+
+    /** The hero image currently set for a page, or for the site-wide default when $page is null. */
+    private function readHeroImage(?string $page): ?string
+    {
+        if ($page === null) {
+            return $this->getSettings('website')['page_hero_image'] ?? null;
+        }
+
+        [$namespace, $path] = PageHeroes::storageTarget($page);
+        $settings           = $this->getSettings($namespace);
+
+        if (! str_contains($path, '.')) {
+            return $settings[$path] ?? null;
+        }
+
+        [$bag, $key] = explode('.', $path, 2);
+
+        return $settings[$bag][$key] ?? null;
+    }
+
+    /**
+     * Delete the file an upload has just replaced, unless something still uses it.
+     *
+     * Old files used to be left on disk forever; a replaced 3.55 MB hero image
+     * is what showed it. Two images can share one file (an admin can point a
+     * page header at an image uploaded for another page), so the church's
+     * settings are searched first and a file still referenced anywhere is kept.
+     * Resolving the URL to a path, and confining the delete to $directory, is
+     * PublicUploads' job.
+     */
+    private function discardReplacedImage(?string $oldUrl, ?string $newUrl, string $directory): void
+    {
+        if (! $oldUrl || $oldUrl === $newUrl || $this->churchStillReferences($oldUrl)) {
+            return;
+        }
+
+        PublicUploads::deleteUrl($oldUrl, $directory);
+    }
+
+    /** Whether $url still appears anywhere in this church's logo or settings. */
+    private function churchStillReferences(string $url): bool
+    {
+        $church = $this->resolvedChurch()->fresh();
+        $found  = $church->logo === $url;
+
+        $settings = $church->settings ?? [];
+        array_walk_recursive($settings, function ($value) use ($url, &$found) {
+            if ($value === $url) {
+                $found = true;
+            }
+        });
+
+        return $found;
     }
 
     /**
@@ -382,7 +443,9 @@ class ChurchSettingsController extends Controller
         ]);
 
         $page = $validated['page'] ?? null;
+        $old  = $this->readHeroImage($page);
         $this->writeHeroImage($page, null);
+        $this->discardReplacedImage($old, null, 'hero-images');
         $this->auditSettings($request, 'settings.website.page_hero_image.removed', [], ['page' => $page ?? 'default']);
 
         return back()->with('success', $page === null
@@ -398,10 +461,12 @@ class ChurchSettingsController extends Controller
             'favicon' => ['required', 'image', 'mimes:png,jpg,jpeg,webp,ico', 'max:512'],
         ]);
 
+        $old  = $this->getSettings('branding')['favicon'] ?? null;
         $path = $request->file('favicon')->store('favicons', 'public');
         $url  = Storage::disk('public')->url($path);
 
         $this->saveSettings('branding', ['favicon' => $url]);
+        $this->discardReplacedImage($old, $url, 'favicons');
         $this->auditSettings($request, 'settings.branding.favicon.uploaded', [], ['favicon' => $url]);
 
         return back()->with('success', 'Favicon uploaded.');
@@ -1127,10 +1192,12 @@ class ChurchSettingsController extends Controller
             'og_image' => ['required', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
         ]);
 
+        $old  = $this->getSettings('seo')['og_image'] ?? null;
         $path = $request->file('og_image')->store('og-images', 'public');
         $url  = Storage::disk('public')->url($path);
 
         $this->saveSettings('seo', ['og_image' => $url]);
+        $this->discardReplacedImage($old, $url, 'og-images');
         $this->auditSettings($request, 'settings.seo.og_image.uploaded', [], ['og_image' => $url]);
 
         return back()->with('success', 'Social share image uploaded.');

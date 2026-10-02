@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Support\PublicUploads;
 use App\Traits\LogsAuditEvents;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -56,10 +58,17 @@ class ProfileController extends Controller
             'avatar' => ['required', 'image', 'mimes:png,jpg,jpeg,webp,gif', 'max:2048'],
         ]);
 
+        $user = $request->user();
+        $old  = $user->avatar;
         $path = $request->file('avatar')->store('avatars', 'public');
         $url  = Storage::disk('public')->url($path);
 
-        $request->user()->update(['avatar' => $url]);
+        $user->update(['avatar' => $url]);
+
+        // Delete the avatar this replaced, unless another account uses the same file.
+        if ($old && $old !== $url && ! User::where('avatar', $old)->exists()) {
+            PublicUploads::deleteUrl($old, 'avatars');
+        }
 
         return back()->with('success', 'Avatar updated.');
     }
