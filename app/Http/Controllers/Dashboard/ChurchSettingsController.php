@@ -236,6 +236,77 @@ class ChurchSettingsController extends Controller
     }
 
     /**
+     * POST /dashboard/settings/homepage/hero-video
+     *
+     * Optional looping background video for the homepage hero. The hero image
+     * stays in use as its poster frame and as the fallback for visitors who
+     * have reduced motion or data saving switched on, so the two are kept as
+     * separate settings and uploading one never clears the other.
+     *
+     * Content AND filename are both checked, as for every upload here: a real
+     * MP4 renamed to .html passes a content check, and an HTML file renamed to
+     * .mp4 passes a filename check. 10 MB matches the documented nginx
+     * client_max_body_size, so a larger file fails here with a readable message
+     * rather than at the proxy with a bare 413.
+     */
+    public function uploadHeroVideo(Request $request): RedirectResponse
+    {
+        $this->authorizeSettings();
+        $request->validate([
+            'hero_video' => [
+                'required', 'file',
+                // application/mp4 is the RFC 4337 type for the same container;
+                // which of the two finfo reports depends on the libmagic build.
+                'mimetypes:video/mp4,application/mp4,video/webm',
+                'extensions:mp4,webm',
+                'max:10240',
+            ],
+        ], [
+            'hero_video.max'       => 'The video must be 10 MB or smaller. A 10–20 second clip at 720p is plenty for a background.',
+            'hero_video.mimetypes' => 'The video must be an MP4 or WebM file.',
+            'hero_video.extensions' => 'The video must be an MP4 or WebM file.',
+        ]);
+
+        // Videos are large: delete the one being replaced rather than leave
+        // every past upload sitting on the server's disk.
+        $this->deleteHeroVideoFile();
+
+        $path = $request->file('hero_video')->store('hero-videos', 'public');
+        $url  = Storage::disk('public')->url($path);
+
+        // The disk path is stored alongside the URL so deletion targets exactly
+        // the file we wrote, never a path reconstructed from a URL.
+        $this->saveSettings('homepage', ['hero_video' => $url, 'hero_video_path' => $path]);
+        $this->auditSettings($request, 'settings.homepage.hero_video.uploaded', [], ['hero_video' => $url]);
+
+        return back()->with('success', 'Hero video uploaded.');
+    }
+
+    /** DELETE /dashboard/settings/homepage/hero-video */
+    public function removeHeroVideo(Request $request): RedirectResponse
+    {
+        $this->authorizeSettings();
+
+        $this->deleteHeroVideoFile();
+        $this->saveSettings('homepage', ['hero_video' => null, 'hero_video_path' => null]);
+        $this->auditSettings($request, 'settings.homepage.hero_video.removed', [], []);
+
+        return back()->with('success', 'Hero video removed. The hero image or gradient is shown instead.');
+    }
+
+    /** Delete the current hero video file, if there is one and it is ours. */
+    private function deleteHeroVideoFile(): void
+    {
+        $path = $this->getSettings('homepage')['hero_video_path'] ?? null;
+
+        // Only ever delete inside hero-videos/ — the path comes from settings,
+        // and settings must not be able to steer a delete anywhere else.
+        if ($path && str_starts_with($path, 'hero-videos/') && ! str_contains($path, '..')) {
+            Storage::disk('public')->delete($path);
+        }
+    }
+
+    /**
      * POST /dashboard/settings/website/page-hero-image
      *
      * Background image for the header of every inner page (About, Events,
@@ -680,6 +751,7 @@ class ChurchSettingsController extends Controller
             'settings' => [
                 'hero_description'     => $settings['hero_description']     ?? null,
                 'hero_image'           => $settings['hero_image']           ?? null,
+                'hero_video'           => $settings['hero_video']           ?? null,
                 'stats'                => $settings['stats']                ?? [],
                 'testimonials'         => $settings['testimonials']         ?? [],
                 'events_subtitle'      => $settings['events_subtitle']      ?? null,

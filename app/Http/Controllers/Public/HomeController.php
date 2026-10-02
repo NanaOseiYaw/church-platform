@@ -51,6 +51,8 @@ class HomeController extends Controller
             // Hero description + image: admin override → falls back in Vue
             'heroDescription'    => $homepageSettings['hero_description'] ?? null,
             'heroImage'          => $homepageSettings['hero_image']       ?? null,
+            // Optional background video; heroImage doubles as its poster frame.
+            'heroVideo'          => $homepageSettings['hero_video']       ?? null,
             'hasLivestream'      => !empty($lsSettings['embed_url']) || !empty($lsSettings['stream_url']),
             // Stats and testimonials come from Settings → Homepage; empty = section hidden
             'stats'              => $homepageSettings['stats']        ?? [],

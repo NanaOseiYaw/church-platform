@@ -8,8 +8,8 @@ import SermonCard from '@/Components/Cards/SermonCard.vue'
 import AnnouncementCard from '@/Components/Cards/AnnouncementCard.vue'
 import { useChurch } from '@/composables/useChurch'
 import type { Event, Sermon, Announcement, Stat, ServiceTime, Testimonial, MinistryHighlight } from '@/types'
-import { ArrowRight, Play, Calendar } from 'lucide-vue-next'
-import { computed } from 'vue'
+import { ArrowRight, Play, Pause, Calendar } from 'lucide-vue-next'
+import { computed, ref, onMounted, nextTick } from 'vue'
 
 const props = defineProps<{
     serviceTimes:        ServiceTime[]
@@ -21,6 +21,7 @@ const props = defineProps<{
     ministryHighlights:  MinistryHighlight[]
     heroDescription:     string | null
     heroImage:           string | null
+    heroVideo:           string | null
     hasLivestream:       boolean
     eventsSubtitle:      string | null
     ministryHeading:     string | null
@@ -57,6 +58,46 @@ const mainServiceDay = computed(() => {
     const main = props.serviceTimes.find(s => (s as any).type === 'main') ?? props.serviceTimes[0]
     return (main as any).day ?? 'Sunday'
 })
+
+// ── Hero background video ────────────────────────────────────────────────────
+// Optional. The hero image (or the gradient) is always the first thing painted;
+// the video is only created after mount, and only for visitors who have not
+// asked for reduced motion or reduced data. That decision is made before the
+// <video> exists, so those visitors never download the file at all.
+const heroVideoEl  = ref<HTMLVideoElement | null>(null)
+const videoAllowed = ref(false)
+const videoReady   = ref(false)   // fades in on `canplay`, so no black flash while it loads
+const videoPaused  = ref(false)
+
+onMounted(async () => {
+    if (!props.heroVideo) return
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const saveData      = (navigator as any).connection?.saveData === true
+    if (reducedMotion || saveData) return
+
+    videoAllowed.value = true
+    await nextTick()
+
+    // Autoplay is only permitted when muted. Vue sets `muted` as a property,
+    // which some browsers do not count until playback is requested, so it is
+    // set again here immediately before play() rather than trusted from markup.
+    const el = heroVideoEl.value
+    if (!el) return
+    el.muted = true
+    el.play().catch(() => { videoPaused.value = true })
+})
+
+// Moving content that runs longer than five seconds needs a way to stop it
+// (WCAG 2.2.2), so the loop always has a visible pause control.
+function toggleHeroVideo() {
+    const el = heroVideoEl.value
+    if (!el) return
+    if (el.paused) { el.play().catch(() => {}); videoPaused.value = false }
+    else           { el.pause();                videoPaused.value = true  }
+}
+
+const heroHasMedia = computed(() => !!props.heroImage || videoAllowed.value)
 </script>
 
 <template>
@@ -72,8 +113,29 @@ const mainServiceDay = computed(() => {
         >
             <!-- Top accent line -->
             <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-500/40 to-transparent" aria-hidden="true"></div>
-            <!-- Dark overlay for legibility when hero image is set -->
-            <div v-if="props.heroImage" class="absolute inset-0 bg-black/55 pointer-events-none" aria-hidden="true"></div>
+            <!-- Background video, under the same scrim as the image. Decorative: hidden
+                 from assistive technology and kept out of the tab order. -->
+            <video
+                v-if="videoAllowed && props.heroVideo"
+                ref="heroVideoEl"
+                :src="props.heroVideo"
+                :poster="props.heroImage ?? undefined"
+                class="absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-700"
+                :class="videoReady ? 'opacity-100' : 'opacity-0'"
+                muted
+                loop
+                playsinline
+                preload="auto"
+                disablepictureinpicture
+                disableremoteplayback
+                aria-hidden="true"
+                tabindex="-1"
+                @canplay="videoReady = true"
+                @error="videoAllowed = false"
+            ></video>
+
+            <!-- Dark overlay for legibility when an image or video is behind the text -->
+            <div v-if="heroHasMedia" class="absolute inset-0 bg-black/55 pointer-events-none" aria-hidden="true"></div>
 
             <!-- z-10 keeps the content above the image overlay and any future
                  decoration layered into the hero. -->
@@ -155,6 +217,16 @@ const mainServiceDay = computed(() => {
                 </div>
             </div>
 
+            <button
+                v-if="videoAllowed && videoReady"
+                type="button"
+                class="absolute bottom-5 right-5 z-20 inline-flex items-center justify-center w-9 h-9 rounded-full bg-black/40 text-white/80 border border-white/15 backdrop-blur-sm hover:bg-black/60 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white transition-colors"
+                :aria-label="videoPaused ? 'Play background video' : 'Pause background video'"
+                @click="toggleHeroVideo"
+            >
+                <Play v-if="videoPaused" class="w-3.5 h-3.5" aria-hidden="true" />
+                <Pause v-else class="w-3.5 h-3.5" aria-hidden="true" />
+            </button>
         </section>
 
         <!-- ── Featured Events ────────────────────────────────────────────────── -->

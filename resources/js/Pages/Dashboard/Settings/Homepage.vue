@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import { useForm, router } from '@inertiajs/vue3'
 import SettingsLayout from '@/Layouts/SettingsLayout.vue'
 import AppInput from '@/Components/UI/AppInput.vue'
 import AppButton from '@/Components/UI/AppButton.vue'
-import { Plus, Trash2, GripVertical, BarChart2, MessageSquare, AlignLeft, ImagePlus, Upload } from 'lucide-vue-next'
+import { Plus, Trash2, GripVertical, BarChart2, MessageSquare, AlignLeft, ImagePlus, Upload, Film } from 'lucide-vue-next'
 
 interface StatItem {
     label: string
@@ -28,6 +28,7 @@ interface SectionVisibility {
 interface Settings {
     hero_description:      string | null
     hero_image:            string | null
+    hero_video:            string | null
     stats:                 StatItem[]
     testimonials:          Testimonial[]
     events_subtitle:       string | null
@@ -110,6 +111,52 @@ function onHeroImageFileChange(e: Event) {
         },
     })
 }
+
+// ── Hero video upload ─────────────────────────────────────────────────────────
+// 10 MB matches the server's upload limit. Checked here first so an oversized
+// file gets a plain explanation instead of failing at the web server.
+const HERO_VIDEO_MAX_BYTES = 10 * 1024 * 1024
+
+const heroVideoFileRef = ref<HTMLInputElement | null>(null)
+const heroVideoForm    = useForm({ hero_video: null as File | null })
+const heroVideoUrl     = ref<string | null>(props.settings.hero_video)
+const heroVideoError   = ref<string | null>(null)
+
+function triggerHeroVideoUpload() {
+    heroVideoFileRef.value?.click()
+}
+
+function onHeroVideoFileChange(e: Event) {
+    const input = e.target as HTMLInputElement
+    const file  = input.files?.[0]
+    heroVideoError.value = null
+    if (!file) return
+
+    if (file.size > HERO_VIDEO_MAX_BYTES) {
+        const mb = (file.size / 1024 / 1024).toFixed(1)
+        heroVideoError.value = `That file is ${mb} MB; the limit is 10 MB. Shorten it to 10–20 seconds or export it at 720p.`
+        input.value = ''
+        return
+    }
+
+    heroVideoForm.hero_video = file
+    heroVideoForm.post('/dashboard/settings/homepage/hero-video', {
+        preserveScroll: true,
+        forceFormData:  true,
+        onSuccess: () => {
+            heroVideoUrl.value = URL.createObjectURL(file)
+            heroVideoForm.reset()
+            input.value = ''
+        },
+    })
+}
+
+function removeHeroVideo() {
+    router.delete('/dashboard/settings/homepage/hero-video', {
+        preserveScroll: true,
+        onSuccess: () => { heroVideoUrl.value = null },
+    })
+}
 </script>
 
 <template>
@@ -161,6 +208,68 @@ function onHeroImageFileChange(e: Event) {
                     <p class="text-xs text-neutral-400 mt-1.5">JPG, PNG or WebP · max 5 MB</p>
                     <p v-if="heroImageForm.errors.hero_image" class="text-xs text-rose-500 mt-1">
                         {{ (heroImageForm.errors as any).hero_image }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- ── Hero video ────────────────────────────────────────────────── -->
+            <div class="bg-white border border-neutral-100 rounded-xl divide-y divide-neutral-100">
+                <div class="px-5 py-4 flex items-center gap-2">
+                    <Film class="w-4 h-4 text-neutral-400 shrink-0" />
+                    <div>
+                        <h3 class="text-sm font-semibold text-neutral-900">Hero video <span class="font-normal text-neutral-400">(optional)</span></h3>
+                        <p class="text-xs text-neutral-500 mt-0.5">
+                            Plays silently on a loop behind the homepage heading. The hero image above is shown
+                            while it loads, and instead of it for visitors who have reduced motion or data saving
+                            switched on, so set an image as well.
+                        </p>
+                    </div>
+                </div>
+                <div class="p-5">
+                    <div v-if="heroVideoUrl" class="mb-4 rounded-xl overflow-hidden aspect-video bg-neutral-900">
+                        <video :src="heroVideoUrl" class="w-full h-full object-cover" muted loop autoplay playsinline></video>
+                    </div>
+
+                    <input
+                        ref="heroVideoFileRef"
+                        type="file"
+                        accept="video/mp4,video/webm"
+                        class="sr-only"
+                        @change="onHeroVideoFileChange"
+                    />
+                    <div class="flex items-center gap-2">
+                        <AppButton
+                            variant="outline"
+                            size="sm"
+                            type="button"
+                            :loading="heroVideoForm.processing"
+                            @click="triggerHeroVideoUpload"
+                        >
+                            <Upload class="w-3.5 h-3.5 mr-1.5" />
+                            {{ heroVideoUrl ? 'Replace video' : 'Upload video' }}
+                        </AppButton>
+                        <AppButton
+                            v-if="heroVideoUrl && !heroVideoForm.processing"
+                            variant="ghost"
+                            size="sm"
+                            type="button"
+                            @click="removeHeroVideo"
+                        >
+                            <Trash2 class="w-3.5 h-3.5 mr-1.5" />
+                            Remove
+                        </AppButton>
+                    </div>
+
+                    <!-- Videos take a while on a church connection; show that it is moving. -->
+                    <div v-if="heroVideoForm.progress" class="mt-3 h-1.5 rounded-full bg-neutral-100 overflow-hidden">
+                        <div class="h-full bg-brand-500 transition-all" :style="{ width: `${heroVideoForm.progress.percentage}%` }"></div>
+                    </div>
+
+                    <p class="text-xs text-neutral-400 mt-1.5">
+                        MP4 or WebM · max 10 MB · 10–20 seconds without sound works best
+                    </p>
+                    <p v-if="heroVideoError || heroVideoForm.errors.hero_video" class="text-xs text-rose-500 mt-1">
+                        {{ heroVideoError ?? (heroVideoForm.errors as any).hero_video }}
                     </p>
                 </div>
             </div>

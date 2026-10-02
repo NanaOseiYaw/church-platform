@@ -224,6 +224,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/homepage',             [ChurchSettingsController::class, 'homepage'])       ->name('homepage');
         Route::put('/homepage',             [ChurchSettingsController::class, 'updateHomepage']) ->name('homepage.update');
         Route::post('/homepage/hero-image', [ChurchSettingsController::class, 'uploadHeroImage'])->name('homepage.hero-image');
+        Route::post('/homepage/hero-video',   [ChurchSettingsController::class, 'uploadHeroVideo'])->name('homepage.hero-video');
+        Route::delete('/homepage/hero-video', [ChurchSettingsController::class, 'removeHeroVideo'])->name('homepage.hero-video.remove');
 
         // 9. Communication
         Route::get('/communication', [ChurchSettingsController::class, 'communication'])       ->name('communication');
