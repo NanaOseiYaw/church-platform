@@ -23,6 +23,7 @@ class PublicAnnouncementResource extends JsonResource
         return [
             'id'        => $this->id,
             'title'     => $this->title,
+            'image'     => $this->cover_image,
             'category'  => $this->category,
             'priority'  => $this->priority,
             'is_pinned' => (bool) $this->is_pinned,

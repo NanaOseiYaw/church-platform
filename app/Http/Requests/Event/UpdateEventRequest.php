@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Event;
 
+use App\Support\CoverImage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateEventRequest extends FormRequest
@@ -15,7 +16,7 @@ class UpdateEventRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        return array_merge([
             'title'         => ['required', 'string', 'max:200'],
             'description'   => ['nullable', 'string'],
             'location'      => ['nullable', 'string', 'max:200'],
@@ -30,6 +31,6 @@ class UpdateEventRequest extends FormRequest
             'rsvp_enabled'  => ['boolean'],
             'capacity'      => ['nullable', 'integer', 'min:1'],
             'is_recurring'  => ['boolean'],
-        ];
+        ], CoverImage::rules());
     }
 }

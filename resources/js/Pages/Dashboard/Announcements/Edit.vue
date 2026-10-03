@@ -6,6 +6,7 @@ import PageHeader from '@/Components/Dashboard/PageHeader.vue'
 import AppInput from '@/Components/UI/AppInput.vue'
 import AppTextarea from '@/Components/UI/AppTextarea.vue'
 import AppButton from '@/Components/UI/AppButton.vue'
+import CoverImageField from '@/Components/Dashboard/CoverImageField.vue'
 import AppSelect from '@/Components/UI/AppSelect.vue'
 import { ArrowLeft, Globe, Users, Building2, Lock, Pin, Star } from 'lucide-vue-next'
 import type { Announcement, ContentVisibility } from '@/types'
@@ -57,6 +58,8 @@ const form = useForm({
     expires_at:    props.announcement.expires_at
         ? props.announcement.expires_at.slice(0, 16)
         : '',
+    cover_image:        null as File | null,
+    remove_cover_image: false,
 })
 
 // Clear department when switching away from department_only
@@ -120,7 +123,13 @@ const deptOptions = computed(() => [
 ])
 
 function submit() {
-    form.put(`/dashboard/announcements/${props.announcement.id}`)
+    // A file cannot travel in a PUT: PHP only parses multipart bodies on POST.
+    // With a new image attached, send POST and let Laravel read it as PUT.
+    if (form.cover_image) {
+        form.transform(data => ({ ...data, _method: 'put' })).post(`/dashboard/announcements/${props.announcement.id}`)
+        return
+    }
+    form.transform(data => data).put(`/dashboard/announcements/${props.announcement.id}`)
 }
 </script>
 
@@ -164,6 +173,13 @@ function submit() {
                         :rows="8"
                         :error="form.errors.body"
                         required
+                    />
+
+                    <CoverImageField
+                        v-model:file="form.cover_image"
+                        v-model:remove="form.remove_cover_image"
+                        :current="props.announcement.cover_image"
+                        :error="form.errors.cover_image"
                     />
                 </div>
 

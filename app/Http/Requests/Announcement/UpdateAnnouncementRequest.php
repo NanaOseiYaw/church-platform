@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Announcement;
 
+use App\Support\CoverImage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAnnouncementRequest extends FormRequest
@@ -14,7 +15,7 @@ class UpdateAnnouncementRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        return array_merge([
             'title'         => ['required', 'string', 'max:200'],
             'body'          => ['required', 'string'],
             'priority'      => ['required', 'in:low,medium,high,urgent'],
@@ -25,6 +26,6 @@ class UpdateAnnouncementRequest extends FormRequest
             'is_pinned'     => ['boolean'],
             'published_at'  => ['nullable', 'string'],
             'expires_at'    => ['nullable', 'date'],
-        ];
+        ], CoverImage::rules());
     }
 }

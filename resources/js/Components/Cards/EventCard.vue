@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import FlyerImage from '@/Components/UI/FlyerImage.vue'
 import { Link } from '@inertiajs/vue3'
 import type { Event } from '@/types'
 import { CalendarDays, Clock, MapPin } from 'lucide-vue-next'
@@ -21,13 +22,20 @@ const resolvedHref = computed(() => props.href ?? `/events/${props.event.id}`)
     <Link :href="resolvedHref" class="group relative block bg-white border border-neutral-100 rounded-2xl overflow-hidden hover:shadow-elevated hover:-translate-y-1 transition-all duration-300">
         <!-- Image / cinematic header -->
         <div class="relative aspect-[16/10] overflow-hidden">
-            <!-- Real image -->
-            <img
-                v-if="event.image"
-                :src="event.image"
-                :alt="event.title"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-            />
+            <!--
+                Whole image, never cropped, so a flyer's own text is not cut off.
+                Positioned by a wrapper: putting `absolute` on FlyerImage itself
+                clashed with its own `relative`, the component fell back into the
+                flow at the flyer's full height, and this frame clipped it — the
+                exact crop it exists to prevent.
+            -->
+            <div v-if="event.image" class="absolute inset-0">
+                <FlyerImage
+                    :src="event.image"
+                    :alt="`Image for ${event.title}`"
+                    class="w-full h-full"
+                />
+            </div>
             <!-- No-image: dark styled panel -->
             <div v-else class="absolute inset-0 bg-gradient-to-br from-brand-900 via-neutral-900 to-neutral-950">
                 <!-- Subtle grid pattern -->

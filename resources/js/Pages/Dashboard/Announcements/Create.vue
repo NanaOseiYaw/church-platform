@@ -6,6 +6,7 @@ import PageHeader from '@/Components/Dashboard/PageHeader.vue'
 import AppInput from '@/Components/UI/AppInput.vue'
 import AppTextarea from '@/Components/UI/AppTextarea.vue'
 import AppButton from '@/Components/UI/AppButton.vue'
+import CoverImageField from '@/Components/Dashboard/CoverImageField.vue'
 import AppSelect from '@/Components/UI/AppSelect.vue'
 import { ArrowLeft, Globe, Users, Building2, Lock, Pin, Star } from 'lucide-vue-next'
 import type { ContentVisibility } from '@/types'
@@ -31,6 +32,8 @@ const form = useForm({
     is_pinned:     false,
     published_at:  '' as string,   // '' = draft | 'now' = publish | ISO = schedule
     expires_at:    '',
+    cover_image:        null as File | null,
+    remove_cover_image: false,
 })
 
 // Clear department when switching away from department_only
@@ -141,6 +144,13 @@ function submit() {
                         :rows="8"
                         :error="form.errors.body"
                         required
+                    />
+
+                    <CoverImageField
+                        v-model:file="form.cover_image"
+                        v-model:remove="form.remove_cover_image"
+                        :current="null"
+                        :error="form.errors.cover_image"
                     />
                 </div>
 

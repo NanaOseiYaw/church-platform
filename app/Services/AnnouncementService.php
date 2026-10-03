@@ -163,7 +163,7 @@ class AnnouncementService
             ->orderByDesc('is_pinned')
             ->orderByDesc('published_at')
             ->limit($limit)
-            ->get(['id', 'title', 'body', 'category', 'priority', 'is_pinned', 'is_featured', 'published_at']);
+            ->get(['id', 'title', 'body', 'cover_image', 'category', 'priority', 'is_pinned', 'is_featured', 'published_at']);
     }
 
     // ── Private helpers ────────────────────────────────────────────────────────

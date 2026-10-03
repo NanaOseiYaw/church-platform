@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Support\CoverImage;
 use App\Events\AnnouncementWasPublished;
 use App\Http\Controllers\Concerns\ResolvesChurchData;
 use App\Http\Controllers\Controller;
@@ -67,11 +68,13 @@ class AnnouncementsController extends Controller
     public function store(StoreAnnouncementRequest $request): RedirectResponse
     {
         $actor        = $request->user();
+        // The image is handled apart from the mass-assigned fields — see CoverImage.
         $announcement = $this->announcements->create(
-            $request->validated(),
+            $request->safe()->except(CoverImage::FIELDS),
             $this->resolvedChurchId(),
             $actor->id,
         );
+        CoverImage::apply($request, $announcement, 'announcement-images');
 
         $this->auditLog('announcement.created', $announcement, [], [], ['department_id' => $announcement->department_id]);
 
@@ -139,7 +142,8 @@ class AnnouncementsController extends Controller
     /** PUT /dashboard/announcements/{announcement} */
     public function update(UpdateAnnouncementRequest $request, Announcement $announcement): RedirectResponse
     {
-        $this->announcements->update($announcement, $request->validated());
+        $this->announcements->update($announcement, $request->safe()->except(CoverImage::FIELDS));
+        CoverImage::apply($request, $announcement, 'announcement-images');
 
         $this->auditLog(
             'announcement.updated',

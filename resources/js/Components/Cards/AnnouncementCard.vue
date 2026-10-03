@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3'
+import FlyerImage from '@/Components/UI/FlyerImage.vue'
 import AppBadge from '@/Components/UI/AppBadge.vue'
 import type { Announcement } from '@/types'
 
@@ -22,6 +23,13 @@ const categoryColors: Record<string, 'brand' | 'emerald' | 'amber' | 'rose' | 'b
 
 <template>
     <Link :href="href" class="group block bg-white border border-neutral-100 rounded-2xl p-5 card-hover">
+        <!-- No href on the image: the whole card is already a link. -->
+        <FlyerImage
+            v-if="announcement.image"
+            :src="announcement.image"
+            :alt="`Image for ${announcement.title}`"
+            class="aspect-[16/10] rounded-xl mb-4"
+        />
         <div class="flex items-start justify-between gap-3 mb-3">
             <AppBadge :color="categoryColors[announcement.category ?? ''] ?? 'neutral'">
                 {{ announcement.category }}

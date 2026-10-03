@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Support\CoverImage;
 use App\Events\EventWasCreated;
 use App\Events\EventWasUpdated;
 use App\Http\Controllers\Concerns\ResolvesChurchData;
@@ -66,11 +67,13 @@ class EventsController extends Controller
     public function store(StoreEventRequest $request): RedirectResponse
     {
         $actor = $request->user();
+        // The image is handled apart from the mass-assigned fields — see CoverImage.
         $event = $this->events->create(
-            $request->validated(),
+            $request->safe()->except(CoverImage::FIELDS),
             $this->resolvedChurchId(),
             $actor->id,
         );
+        CoverImage::apply($request, $event, 'event-images');
 
         // Load department relation needed by the subscriber
         EventWasCreated::dispatch($event->load('department'), $actor);
@@ -123,7 +126,8 @@ class EventsController extends Controller
     public function update(UpdateEventRequest $request, Event $event): RedirectResponse
     {
         $actor = $request->user();
-        $this->events->update($event, $request->validated());
+        $this->events->update($event, $request->safe()->except(CoverImage::FIELDS));
+        CoverImage::apply($request, $event, 'event-images');
 
         $this->auditLog(
             'event.updated',

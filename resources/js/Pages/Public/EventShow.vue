@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import FlyerImage from '@/Components/UI/FlyerImage.vue'
 import { Link } from '@inertiajs/vue3'
 import PublicLayout from '@/Layouts/PublicLayout.vue'
 import SectionWrapper from '@/Components/UI/SectionWrapper.vue'
@@ -22,16 +23,30 @@ const pageDescription = computed(() =>
 <template>
     <PublicLayout :title="pageTitle" :description="pageDescription">
 
-        <!-- ── Hero image / header ─────────────────────────────────────────────── -->
-        <div class="relative w-full bg-neutral-950" style="min-height: 320px; max-height: 520px; overflow: hidden;">
-            <img
-                v-if="event.image"
+        <!--
+            With an image: shown whole, never cropped, and the title sits below it
+            rather than over it. A flyer carries its own date and venue, which a
+            wide banner crop and an overlaid title would both hide.
+        -->
+        <div v-if="event.image" class="bg-neutral-950">
+            <FlyerImage
                 :src="event.image"
-                :alt="event.title"
-                class="w-full h-full object-cover"
-                style="max-height: 520px;"
+                :alt="`Image for ${event.title}`"
+                :href="event.image"
+                class="w-full h-[min(70vh,640px)]"
             />
-            <div v-else class="absolute inset-0 bg-gradient-to-br from-brand-900 via-neutral-900 to-neutral-950">
+            <div class="mx-auto max-w-4xl w-full px-6 pt-8 pb-10">
+                <span v-if="event.category" class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white/60 mb-3">
+                    <Tag class="w-3 h-3" />
+                    {{ event.category }}
+                </span>
+                <h1 class="text-3xl sm:text-4xl font-bold text-white leading-tight">{{ event.title }}</h1>
+            </div>
+        </div>
+
+        <!-- Without an image: the original gradient header with the title overlaid. -->
+        <div v-else class="relative w-full bg-neutral-950" style="min-height: 320px; max-height: 520px; overflow: hidden;">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-900 via-neutral-900 to-neutral-950">
                 <div class="absolute inset-0 opacity-10"
                     style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 32px 32px;">
                 </div>

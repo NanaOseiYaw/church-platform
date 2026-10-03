@@ -253,6 +253,9 @@ export interface Announcement {
     created_by: number
     title: string
     body: string
+    /** Optional cover image or flyer: `cover_image` in the dashboard, `image` on public pages. */
+    cover_image?: string | null
+    image?: string | null
     category: string | null
     priority: AnnouncementPriority
     is_pinned: boolean

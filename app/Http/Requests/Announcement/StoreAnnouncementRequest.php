@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Announcement;
 
+use App\Support\CoverImage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAnnouncementRequest extends FormRequest
@@ -13,7 +14,7 @@ class StoreAnnouncementRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        return array_merge([
             'title'         => ['required', 'string', 'max:200'],
             'body'          => ['required', 'string'],
             'priority'      => ['required', 'in:low,medium,high,urgent'],
@@ -24,6 +25,6 @@ class StoreAnnouncementRequest extends FormRequest
             'is_pinned'     => ['boolean'],
             'published_at'  => ['nullable', 'string'],  // 'now' | ISO-8601 | empty (draft)
             'expires_at'    => ['nullable', 'date'],
-        ];
+        ], CoverImage::rules());
     }
 }

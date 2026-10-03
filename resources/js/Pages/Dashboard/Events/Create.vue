@@ -6,6 +6,7 @@ import PageHeader from '@/Components/Dashboard/PageHeader.vue'
 import AppInput from '@/Components/UI/AppInput.vue'
 import AppTextarea from '@/Components/UI/AppTextarea.vue'
 import AppButton from '@/Components/UI/AppButton.vue'
+import CoverImageField from '@/Components/Dashboard/CoverImageField.vue'
 import AppSelect from '@/Components/UI/AppSelect.vue'
 import { ArrowLeft, Globe, Users, Building2, Lock, Calendar, Star } from 'lucide-vue-next'
 import type { EventVisibility } from '@/types'
@@ -35,6 +36,8 @@ const form = useForm({
     rsvp_enabled:  false,
     capacity:      '' as string | number,
     is_recurring:  false,
+    cover_image:        null as File | null,
+    remove_cover_image: false,
 })
 
 // Publish mode (mirrors announcement pattern)
@@ -144,6 +147,13 @@ function submit() {
                             :error="form.errors.description"
                         />
                     </div>
+
+                    <CoverImageField
+                        v-model:file="form.cover_image"
+                        v-model:remove="form.remove_cover_image"
+                        :current="null"
+                        :error="form.errors.cover_image"
+                    />
                 </div>
 
                 <!-- ── Section 2: Date & Time ─────────────────────────────── -->

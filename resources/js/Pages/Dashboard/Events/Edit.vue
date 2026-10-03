@@ -6,6 +6,7 @@ import PageHeader from '@/Components/Dashboard/PageHeader.vue'
 import AppInput from '@/Components/UI/AppInput.vue'
 import AppTextarea from '@/Components/UI/AppTextarea.vue'
 import AppButton from '@/Components/UI/AppButton.vue'
+import CoverImageField from '@/Components/Dashboard/CoverImageField.vue'
 import AppSelect from '@/Components/UI/AppSelect.vue'
 import { ArrowLeft, Globe, Users, Building2, Lock, Calendar, Star } from 'lucide-vue-next'
 import type { Event, EventVisibility } from '@/types'
@@ -74,6 +75,8 @@ const form = useForm({
     rsvp_enabled:  props.event.rsvp_enabled,
     capacity:      props.event.capacity    ?? ('' as string | number),
     is_recurring:  props.event.is_recurring,
+    cover_image:        null as File | null,
+    remove_cover_image: false,
 })
 
 // Clear department when switching away from department_only
@@ -116,7 +119,13 @@ const deptOptions = computed(() => [
 ])
 
 function submit() {
-    form.put(`/dashboard/events/${props.event.id}`)
+    // A file cannot travel in a PUT: PHP only parses multipart bodies on POST.
+    // With a new image attached, send POST and let Laravel read it as PUT.
+    if (form.cover_image) {
+        form.transform(data => ({ ...data, _method: 'put' })).post(`/dashboard/events/${props.event.id}`)
+        return
+    }
+    form.transform(data => data).put(`/dashboard/events/${props.event.id}`)
 }
 </script>
 
@@ -171,6 +180,13 @@ function submit() {
                             :error="form.errors.description"
                         />
                     </div>
+
+                    <CoverImageField
+                        v-model:file="form.cover_image"
+                        v-model:remove="form.remove_cover_image"
+                        :current="props.event.cover_image"
+                        :error="form.errors.cover_image"
+                    />
                 </div>
 
                 <!-- ── Section 2: Date & Time ─────────────────────────────── -->

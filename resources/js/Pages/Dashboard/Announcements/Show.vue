@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import FlyerImage from '@/Components/UI/FlyerImage.vue'
 import { router } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import PageHeader from '@/Components/Dashboard/PageHeader.vue'
@@ -229,6 +230,14 @@ function confirmDelete() {
                             {{ announcement.reads_count === 1 ? 'read' : 'reads' }}
                         </div>
                     </div>
+
+                    <FlyerImage
+                        v-if="announcement.cover_image"
+                        :src="announcement.cover_image"
+                        :alt="`Image for ${announcement.title}`"
+                        :href="announcement.cover_image"
+                        class="h-72 rounded-xl mb-6"
+                    />
 
                     <!-- Body -->
                     <div

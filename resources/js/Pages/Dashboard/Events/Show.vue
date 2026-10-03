@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3'
+import FlyerImage from '@/Components/UI/FlyerImage.vue'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import PageHeader from '@/Components/Dashboard/PageHeader.vue'
 import AppAvatar from '@/Components/UI/AppAvatar.vue'
@@ -137,6 +138,14 @@ function confirmDelete() {
                         :class="{ 'line-through opacity-60': event.status === 'cancelled' }">
                         {{ event.title }}
                     </h1>
+
+                    <FlyerImage
+                        v-if="event.cover_image"
+                        :src="event.cover_image"
+                        :alt="`Image for ${event.title}`"
+                        :href="event.cover_image"
+                        class="h-72 rounded-xl mb-6"
+                    />
 
                     <!-- Event metadata grid -->
                     <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-neutral-50 rounded-xl mb-6">

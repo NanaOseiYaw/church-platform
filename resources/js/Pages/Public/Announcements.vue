@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import FlyerImage from '@/Components/UI/FlyerImage.vue'
 import PublicLayout from '@/Layouts/PublicLayout.vue'
 import SectionWrapper from '@/Components/UI/SectionWrapper.vue'
 import PageHero from '@/Components/UI/PageHero.vue'
@@ -59,6 +60,16 @@ const categoryColors: Record<string, any> = {
                     class="group bg-white border border-neutral-100 rounded-2xl p-6 md:p-7 hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300 reveal"
                     :class="`reveal-delay-${Math.min(i + 1, 4)}`"
                 >
+                    <div :class="ann.image ? 'flex flex-col sm:flex-row gap-5' : ''">
+                    <!-- Portrait-friendly frame, since many flyers are. Opens full size to read the small print. -->
+                    <FlyerImage
+                        v-if="ann.image"
+                        :src="ann.image"
+                        :alt="`Image for ${ann.title}`"
+                        :href="ann.image"
+                        class="w-full sm:w-44 shrink-0 aspect-[4/3] sm:aspect-[4/5] rounded-xl"
+                    />
+                    <div class="min-w-0 flex-1">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
                         <div class="flex items-center gap-2.5 flex-wrap">
                             <AppBadge :color="categoryColors[ann.category ?? ''] ?? 'neutral'">{{ ann.category }}</AppBadge>
@@ -77,6 +88,8 @@ const categoryColors: Record<string, any> = {
                     <p v-if="ann.excerpt" class="text-sm text-neutral-500 leading-relaxed">
                         {{ ann.excerpt }}
                     </p>
+                    </div>
+                    </div>
                 </article>
 
                 <!-- Empty state -->

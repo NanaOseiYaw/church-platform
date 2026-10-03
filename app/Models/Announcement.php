@@ -17,7 +17,7 @@ class Announcement extends Model
     protected $fillable = [
         'church_id', 'department_id', 'created_by', 'title', 'body',
         'category', 'is_pinned', 'is_church_wide', 'visibility', 'is_featured',
-        'priority', 'published_at', 'expires_at',
+        'priority', 'published_at', 'expires_at', 'cover_image',
     ];
 
     protected $casts = [
