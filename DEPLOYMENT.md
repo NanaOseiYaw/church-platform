@@ -158,6 +158,9 @@ FILESYSTEM_DISK=local             # uploaded files stay on the server in storage
 
 # ─── YouTube Sync ─────────────────────────────────────────────────────────────
 YOUTUBE_API_KEY=AIzaSy...         # Google Cloud Console → YouTube Data API v3
+                                  # Restrict by IP ADDRESS (server IPv4 + IPv6), never
+                                  # by HTTP referrer — server requests send no Referer,
+                                  # so a referrer-locked key rejects every sync.
 
 # ─── Church Defaults (used before admin configures via Settings) ───────────────
 CHURCH_NAME="Grace Community Church"
@@ -397,6 +400,32 @@ sudo supervisorctl restart church-queue:*
 php /var/www/church-platform/artisan queue:restart
 ```
 
+### The scheduler (cron)
+
+The queue worker runs jobs, but something has to *start* the recurring ones.
+Laravel's scheduler does that, and on a server it needs one cron entry. Without
+it nothing scheduled ever runs — and nothing reports that it isn't running.
+
+Currently scheduled (`php artisan schedule:list`):
+
+| Task | Runs | Without cron |
+|---|---|---|
+| `sync-sermon-channels` | hourly | New YouTube videos never import on their own. Connecting a channel and pressing **Sync now** still work, because those queue the job directly. |
+
+Add the entry for the `deploy` user (it owns the app, so files the scheduler
+writes stay readable by PHP-FPM):
+
+```bash
+(sudo crontab -u deploy -l 2>/dev/null; echo '* * * * * cd /var/www/copam && php artisan schedule:run >> /dev/null 2>&1') | sudo crontab -u deploy -
+```
+
+Check it is installed and that Laravel sees the task:
+
+```bash
+sudo crontab -u deploy -l
+sudo -u deploy php /var/www/copam/artisan schedule:list
+```
+
 ---
 
 ## 8. Supervisor — Reverb WebSocket Server
@@ -528,6 +557,7 @@ Run through this before announcing the beta to users:
 
 **Background processes**
 - [ ] `supervisorctl status` shows both `church-queue` and `church-reverb` as `RUNNING`
+- [ ] The scheduler cron entry exists (`sudo crontab -u deploy -l` shows `schedule:run`)
 - [ ] Test a queue job: trigger a YouTube sync and verify the notification arrives in the bell
 
 **Mail**
@@ -539,7 +569,7 @@ Run through this before announcing the beta to users:
 - [ ] `A` record for `www.your-domain.com` → server IP (or CNAME → bare domain)
 
 **Environment**
-- [ ] `YOUTUBE_API_KEY` is set and the YouTube Data API v3 is enabled in Google Cloud Console
+- [ ] `YOUTUBE_API_KEY` is set, the YouTube Data API v3 is enabled in Google Cloud Console, and the key is restricted by **IP address** (not HTTP referrer)
 - [ ] `REVERB_APP_KEY` / `REVERB_APP_SECRET` / `REVERB_APP_ID` are consistent between `.env` and the Nginx config
 - [ ] `VITE_REVERB_*` variables were set **before** running `npm run build` (they are baked into the JS bundle at build time)
 
