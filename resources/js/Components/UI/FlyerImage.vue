@@ -10,14 +10,32 @@
  * The parent sets the frame's size with a class (an aspect ratio or a height).
  * Pass `href` to make it open the full-size image — useful for a flyer whose
  * small print is meant to be read.
+ *
+ * Pass `adaptRatio` ([narrowest, widest] width/height) where the frame has a
+ * fixed width but its height is free: once the image loads, the frame takes
+ * the image's own shape within those limits. Without it, a fixed portrait
+ * frame shrank a landscape photo to under half its area (and vice versa).
+ * The parent's aspect class still applies until the image has loaded.
  */
+import { ref } from 'vue'
 import { Maximize2 } from 'lucide-vue-next'
 
-defineProps<{
+const props = defineProps<{
     src: string
     alt: string
     href?: string
+    adaptRatio?: [number, number]
 }>()
+
+const ratio = ref<number | null>(null)
+
+function onLoad(e: Event) {
+    if (!props.adaptRatio) return
+    const img = e.target as HTMLImageElement
+    if (!img.naturalWidth || !img.naturalHeight) return
+    const [narrowest, widest] = props.adaptRatio
+    ratio.value = Math.min(widest, Math.max(narrowest, img.naturalWidth / img.naturalHeight))
+}
 </script>
 
 <template>
@@ -27,6 +45,7 @@ defineProps<{
         :target="href ? '_blank' : undefined"
         :rel="href ? 'noopener' : undefined"
         class="relative block overflow-hidden bg-neutral-900"
+        :style="ratio ? { aspectRatio: String(ratio) } : undefined"
     >
         <!-- Blurred fill. Decorative, so hidden from assistive technology. -->
         <img
@@ -43,6 +62,7 @@ defineProps<{
             class="relative w-full h-full object-contain"
             loading="lazy"
             decoding="async"
+            @load="onLoad"
         />
 
         <!--

@@ -61,13 +61,20 @@ const categoryColors: Record<string, any> = {
                     :class="`reveal-delay-${Math.min(i + 1, 4)}`"
                 >
                     <div :class="ann.image ? 'flex flex-col sm:flex-row gap-5' : ''">
-                    <!-- Portrait-friendly frame, since many flyers are. Opens full size to read the small print. -->
+                    <!--
+                        The frame takes the image's own shape once loaded, from a 4:5
+                        portrait flyer to a 16:10 landscape photo, so either fills it;
+                        a fixed portrait frame shrank landscape photos to under half
+                        its area. self-start stops the row stretching it out of shape.
+                        Opens full size to read a flyer's small print.
+                    -->
                     <FlyerImage
                         v-if="ann.image"
                         :src="ann.image"
                         :alt="`Image for ${ann.title}`"
                         :href="ann.image"
-                        class="w-full sm:w-44 shrink-0 aspect-[4/3] sm:aspect-[4/5] rounded-xl"
+                        :adapt-ratio="[0.8, 1.6]"
+                        class="w-full sm:w-52 shrink-0 self-start aspect-[4/3] rounded-xl"
                     />
                     <div class="min-w-0 flex-1">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
