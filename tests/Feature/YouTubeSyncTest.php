@@ -188,11 +188,11 @@ class YouTubeSyncTest extends TestCase
     public function test_a_hidden_sermon_stays_hidden(): void
     {
         $this->sync();
-        $this->sermon('noDateAny001')->update(['visibility' => 'private', 'is_public' => false]);
+        $this->sermon('noDateAny001')->update(['visibility' => 'unlisted', 'is_public' => false]);
 
         $this->sync();
 
-        $this->assertSame('private', $this->sermon('noDateAny001')->visibility);
+        $this->assertSame('unlisted', $this->sermon('noDateAny001')->visibility);
     }
 
     public function test_resync_creates_nothing_new(): void
