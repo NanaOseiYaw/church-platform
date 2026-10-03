@@ -165,23 +165,54 @@ class SermonSyncService
             );
         }
 
+        // Kept current on every sync: these describe the video itself, and an
+        // admin has no reason to edit them by hand.
         $sermon->fill([
             'provider_channel_id' => $connection->id,
-            'title'               => $video['title'],
-            'description'         => $video['description'],
             'thumbnail_url'       => $video['thumbnail_url'],
             'embed_url'           => $video['embed_url'],
             'video_url'           => $video['source_url'],
             'duration_seconds'    => $video['duration_seconds'],
-            'preached_at'         => $video['published_at'],
             'synced_at'           => now(),
             // Defaults for new synced sermons (admin can override later)
             'visibility'          => $sermon->exists ? $sermon->visibility : 'public',
             'is_public'           => $sermon->exists ? $sermon->is_public : true,
         ]);
 
+        $serviceDate = $video['service_date'] ?? $video['published_at'];
+
+        // Title, description and date belong to the admin once imported. These
+        // used to be overwritten from YouTube on every hourly sync, so tidying a
+        // title or correcting a date on the website was silently undone within
+        // the hour. They are now written only when the sermon is first created.
+        if ($isNew) {
+            $sermon->fill([
+                'title'       => $video['title'],
+                'description' => $video['description'],
+                'preached_at' => $serviceDate,
+            ]);
+        } elseif ($this->dateStillFromUpload($sermon, $video)) {
+            // Sermons imported before ServiceDate existed were dated by their
+            // upload. Correct those — but only while the stored date is still
+            // exactly the upload timestamp, which means nobody has edited it.
+            $sermon->preached_at = $serviceDate;
+        }
+
         $sermon->save();
 
         return $isNew ? 'created' : 'updated';
+    }
+
+    /** Whether an existing sermon's date is unset, or still the untouched YouTube upload date. */
+    private function dateStillFromUpload(Sermon $sermon, array $video): bool
+    {
+        if (! $sermon->preached_at) {
+            return true;
+        }
+
+        $uploadedAt = $video['published_at'] ?? null;
+
+        return $uploadedAt !== null
+            && $sermon->preached_at->getTimestamp() === $uploadedAt->getTimestamp();
     }
 }

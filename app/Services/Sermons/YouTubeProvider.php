@@ -162,15 +162,17 @@ class YouTubeProvider implements SermonProviderContract
             return [];
         }
 
-        // ── Step 2: fetch duration for each video in batches of 50 ───────────
-        Log::debug("[YouTubeProvider] Fetching durations for " . count($videoIds) . " video(s) …");
-        $durations = $this->fetchDurations($videoIds, $key);
-        Log::debug("[YouTubeProvider] Duration fetch complete: " . count($durations) . " resolved.");
+        // ── Step 2: duration and service-date details, in batches of 50 ──────
+        Log::debug("[YouTubeProvider] Fetching details for " . count($videoIds) . " video(s) …");
+        $details = $this->fetchDetails($videoIds, $key);
+        Log::debug("[YouTubeProvider] Detail fetch complete: " . count($details) . " resolved.");
 
         // ── Step 3: assemble normalised video records ─────────────────────────
         Log::info("[YouTubeProvider] Assembling " . count($videoIds) . " normalised video record(s).");
-        return array_map(function (string $videoId) use ($snippets, $durations): array {
-            $s = $snippets[$videoId];
+        return array_map(function (string $videoId) use ($snippets, $details): array {
+            $s          = $snippets[$videoId];
+            $d          = $details[$videoId] ?? [];
+            $uploadedAt = $s['published_at'] ? Carbon::parse($s['published_at']) : null;
 
             return [
                 'provider_video_id' => $videoId,
@@ -179,10 +181,16 @@ class YouTubeProvider implements SermonProviderContract
                 'thumbnail_url'     => $s['thumbnail'],
                 'embed_url'         => $this->buildEmbedUrl($videoId),
                 'source_url'        => "https://www.youtube.com/watch?v={$videoId}",
-                'duration_seconds'  => $durations[$videoId] ?? null,
-                'published_at'      => $s['published_at']
-                                       ? Carbon::parse($s['published_at'])
-                                       : null,
+                'duration_seconds'  => $d['duration'] ?? null,
+                // When the video reached YouTube.
+                'published_at'      => $uploadedAt,
+                // When the service actually happened — see ServiceDate.
+                'service_date'      => ServiceDate::resolve(
+                    $d['live_started_at'] ?? null,
+                    $d['recorded_on'] ?? null,
+                    $s['title'],
+                    $uploadedAt,
+                ),
             ];
         }, $videoIds);
     }
@@ -252,35 +260,42 @@ class YouTubeProvider implements SermonProviderContract
      * Returns [videoId => durationSeconds]
      *
      * @param  string[]  $videoIds
-     * @return array<string, int>
+     * Asks for the live-stream start and recording date in the same call as
+     * the duration: videos.list costs one quota unit per call whatever parts
+     * are requested, so the service date comes at no extra cost.
+     *
+     * @return array<string, array{duration: ?int, live_started_at: ?string, recorded_on: ?string}>
      */
-    private function fetchDurations(array $videoIds, string $apiKey): array
+    private function fetchDetails(array $videoIds, string $apiKey): array
     {
-        $durations = [];
-        $chunks    = array_chunk($videoIds, self::PER_PAGE);
+        $details = [];
+        $chunks  = array_chunk($videoIds, self::PER_PAGE);
 
         foreach ($chunks as $chunk) {
             $response = Http::timeout(15)
                 ->get(self::BASE . '/videos', [
                     'key'  => $apiKey,
                     'id'   => implode(',', $chunk),
-                    'part' => 'contentDetails',
+                    'part' => 'contentDetails,liveStreamingDetails,recordingDetails',
                 ]);
 
             if ($response->failed()) {
-                Log::warning('YouTube: videos.list failed — durations skipped: ' . $response->status());
+                Log::warning('YouTube: videos.list failed — durations and service dates skipped: ' . $response->status());
                 continue;
             }
 
             foreach ($response->json('items', []) as $item) {
-                $id  = $item['id'];
                 $iso = $item['contentDetails']['duration'] ?? null;
 
-                $durations[$id] = $iso ? \App\Models\Sermon::parseIsoDuration($iso) : null;
+                $details[$item['id']] = [
+                    'duration'        => $iso ? \App\Models\Sermon::parseIsoDuration($iso) : null,
+                    'live_started_at' => $item['liveStreamingDetails']['actualStartTime'] ?? null,
+                    'recorded_on'     => $item['recordingDetails']['recordingDate'] ?? null,
+                ];
             }
         }
 
-        return $durations;
+        return $details;
     }
 
     /**
