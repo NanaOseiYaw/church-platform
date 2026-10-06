@@ -10,6 +10,7 @@ use App\Models\Department;
 use App\Models\Sermon;
 use App\Services\AnnouncementService;
 use App\Services\EventService;
+use App\Services\Instagram\InstagramService;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,6 +19,7 @@ class HomeController extends Controller
     public function __construct(
         private readonly AnnouncementService $announcements,
         private readonly EventService        $events,
+        private readonly InstagramService    $instagram,
     ) {}
 
     public function __invoke(): Response
@@ -41,7 +43,9 @@ class HomeController extends Controller
             'testimonials'  => true,
             'announcements' => true,
             'livestream'    => true,
+            'instagram'     => true,
         ];
+        $sectionVisibility = array_merge($visibilityDefaults, $homepageSettings['section_visibility'] ?? []);
 
         return Inertia::render('Public/Home', [
             'serviceTimes'       => $church?->service_times        ?? config('church.service_times'),
@@ -67,7 +71,11 @@ class HomeController extends Controller
             'testimonialsSubtitle' => $homepageSettings['testimonials_subtitle'] ?? null,
             'livestreamCta'        => $homepageSettings['livestream_cta']        ?? null,
             // Per-section admin visibility toggles
-            'sectionVisibility'    => array_merge($visibilityDefaults, $homepageSettings['section_visibility'] ?? []),
+            'sectionVisibility'    => $sectionVisibility,
+            // Six are shown (one row on desktop, two rows of three on a phone);
+            // two spares let a tile whose image fails be replaced, not leave a gap.
+            // Cached metadata only; never calls Meta during the request.
+            'instagramPosts'       => $sectionVisibility['instagram'] ? $this->instagram->posts(8) : [],
         ]);
     }
 

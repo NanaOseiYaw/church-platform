@@ -2,8 +2,11 @@
 import PublicLayout from '@/Layouts/PublicLayout.vue'
 import SectionWrapper from '@/Components/UI/SectionWrapper.vue'
 import PageHero from '@/Components/UI/PageHero.vue'
+import AppButton from '@/Components/UI/AppButton.vue'
+import InstagramGallery from '@/Components/Public/InstagramGallery.vue'
 import { useChurch } from '@/composables/useChurch'
-import { Images } from 'lucide-vue-next'
+import { Images, Instagram } from 'lucide-vue-next'
+import type { InstagramPost } from '@/types'
 
 interface GalleryImage {
     id: number
@@ -13,7 +16,9 @@ interface GalleryImage {
 }
 
 defineProps<{
-    images: GalleryImage[]
+    images:         GalleryImage[]
+    /** Newest posts from the church's Instagram — cached metadata, media stays on Meta's CDN. */
+    instagramPosts: InstagramPost[]
 }>()
 
 const { church } = useChurch()
@@ -30,8 +35,29 @@ const { church } = useChurch()
             :description="`A glimpse into the life and ministry of ${church?.name ?? 'our church'}.`"
         />
 
-        <SectionWrapper class="py-16">
-            <!-- Empty state -->
+        <!--
+            Instagram first: it updates itself, so it is the freshest thing on
+            the page. Hidden entirely when there is nothing to show.
+        -->
+        <SectionWrapper v-if="instagramPosts.length > 0" class="py-16">
+            <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+                <div>
+                    <p class="text-sm font-semibold tracking-widest uppercase text-brand-500 mb-1">Instagram</p>
+                    <h2 class="text-2xl md:text-3xl font-display text-neutral-900">Latest from Instagram</h2>
+                </div>
+                <AppButton v-if="church?.socials?.instagram" :href="church.socials.instagram" external variant="outline" size="sm">
+                    <Instagram class="w-3.5 h-3.5" aria-hidden="true" /> Follow on Instagram
+                </AppButton>
+            </div>
+            <InstagramGallery :posts="instagramPosts" />
+        </SectionWrapper>
+
+        <SectionWrapper v-if="images.length > 0 || instagramPosts.length === 0" class="py-16">
+            <h2 v-if="instagramPosts.length > 0 && images.length > 0" class="text-2xl md:text-3xl font-display text-neutral-900 mb-8">
+                Photo gallery
+            </h2>
+
+            <!-- Empty state: only when there is neither Instagram nor uploaded photos -->
             <div v-if="images.length === 0" class="flex flex-col items-center justify-center py-24 text-center">
                 <div class="w-16 h-16 bg-neutral-100 rounded-2xl flex items-center justify-center mb-4">
                     <Images class="w-8 h-8 text-neutral-300" />

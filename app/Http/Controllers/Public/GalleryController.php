@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\GalleryImage;
+use App\Services\Instagram\InstagramService;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class GalleryController extends Controller
 {
-    public function __invoke(): Response
+    public function __invoke(InstagramService $instagram): Response
     {
         $churchId = app('church.id');
 
@@ -26,7 +27,9 @@ class GalleryController extends Controller
             ]);
 
         return Inertia::render('Public/Gallery', [
-            'images' => $images,
+            'images'         => $images,
+            // Cached metadata only; never calls Meta during the request.
+            'instagramPosts' => $instagram->posts(),
         ]);
     }
 }

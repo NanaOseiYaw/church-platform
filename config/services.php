@@ -43,4 +43,18 @@ return [
         'base_url' => 'https://www.googleapis.com/youtube/v3',
     ],
 
+    // ── Instagram (Instagram API with Instagram Login) ─────────────────────────
+    // Only the access token is required: a long-lived (60-day) Instagram User
+    // token generated in the Meta App Dashboard. The app refreshes it on a
+    // schedule and keeps the refreshed copy encrypted in private storage, so
+    // this value only needs replacing if the token is ever allowed to lapse.
+    // No account ID is needed — /me resolves it from the token.
+    'instagram' => [
+        'access_token'  => env('INSTAGRAM_ACCESS_TOKEN', ''),
+        'graph_version' => env('INSTAGRAM_GRAPH_VERSION', 'v26.0'),
+        'post_limit'    => (int) env('INSTAGRAM_POST_LIMIT', 12),
+        'cache_minutes' => (int) env('INSTAGRAM_CACHE_MINUTES', 60),
+        'timeout'       => (int) env('INSTAGRAM_TIMEOUT_SECONDS', 8),
+    ],
+
 ];

@@ -826,14 +826,18 @@ class ChurchSettingsController extends Controller
                 'testimonials_subtitle' => $settings['testimonials_subtitle'] ?? null,
                 'livestream_cta'       => $settings['livestream_cta']       ?? null,
                 'sermons_page_subtitle' => $settings['sermons_page_subtitle'] ?? null,
-                'section_visibility'   => $settings['section_visibility'] ?? [
+                // Merged over the defaults so a section added later (instagram)
+                // shows its real state — on — for churches that saved before it
+                // existed, instead of a switch that reads off while it is on.
+                'section_visibility'   => array_merge([
                     'events'        => true,
                     'ministry'      => true,
                     'sermons'       => true,
                     'testimonials'  => true,
                     'announcements' => true,
                     'livestream'    => true,
-                ],
+                    'instagram'     => true,
+                ], $settings['section_visibility'] ?? []),
             ],
         ]);
     }
@@ -865,6 +869,7 @@ class ChurchSettingsController extends Controller
             'section_visibility.testimonials'  => ['boolean'],
             'section_visibility.announcements' => ['boolean'],
             'section_visibility.livestream'    => ['boolean'],
+            'section_visibility.instagram'     => ['boolean'],
         ]);
 
         $this->saveSettings('homepage', [
@@ -880,7 +885,8 @@ class ChurchSettingsController extends Controller
             'sermons_page_subtitle' => $validated['sermons_page_subtitle'] ?? null,
             'section_visibility'    => array_merge(
                 ['events' => true, 'ministry' => true, 'sermons' => true,
-                 'testimonials' => true, 'announcements' => true, 'livestream' => true],
+                 'testimonials' => true, 'announcements' => true, 'livestream' => true,
+                 'instagram' => true],
                 $validated['section_visibility'] ?? []
             ),
         ]);

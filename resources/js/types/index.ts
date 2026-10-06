@@ -399,6 +399,31 @@ export interface MinistryHighlight {
     description: string
 }
 
+/**
+ * One item inside an Instagram post. `src` is null for a video Meta will not
+ * serve (licensed or copyrighted audio) — it is shown by its poster and plays
+ * on Instagram instead.
+ */
+export interface InstagramMedia {
+    type:   'image' | 'video'
+    src:    string | null
+    poster: string | null
+}
+
+/** A post from the church's Instagram, as cached by App\Services\Instagram\InstagramService. */
+export interface InstagramPost {
+    id:         string
+    type:       'image' | 'video' | 'carousel'
+    is_reel:    boolean
+    caption:    string | null
+    permalink:  string
+    timestamp:  string | null
+    thumb:      string
+    media:      InstagramMedia[]
+    count:      number
+    expires_at: number | null
+}
+
 export interface ServiceTime {
     day: string
     times: string[]

@@ -162,6 +162,11 @@ YOUTUBE_API_KEY=AIzaSy...         # Google Cloud Console → YouTube Data API v3
                                   # by HTTP referrer — server requests send no Referer,
                                   # so a referrer-locked key rejects every sync.
 
+# ─── Instagram gallery ────────────────────────────────────────────────────────
+INSTAGRAM_ACCESS_TOKEN=           # Meta App Dashboard → Instagram → API setup with
+                                  # Instagram business login → Generate token.
+                                  # Server-side only; renewed automatically.
+
 # ─── Church Defaults (used before admin configures via Settings) ───────────────
 CHURCH_NAME="Grace Community Church"
 CHURCH_TAGLINE="A Place to Belong"
@@ -411,6 +416,8 @@ Currently scheduled (`php artisan schedule:list`):
 | Task | Runs | Without cron |
 |---|---|---|
 | `sync-sermon-channels` | hourly | New YouTube videos never import on their own. Connecting a channel and pressing **Sync now** still work, because those queue the job directly. |
+| `instagram:refresh` | every 15 min (asks Meta at most hourly) | New Instagram posts only appear when a visitor's page view triggers a background refresh; quiet sites fall behind. |
+| `instagram:refresh-token` | daily (renews weekly) | **The Instagram token expires after 60 days and cannot be revived** — the gallery disappears until a new token is generated in the Meta dashboard. |
 
 Add the entry for the `deploy` user (it owns the app, so files the scheduler
 writes stay readable by PHP-FPM):
@@ -570,6 +577,7 @@ Run through this before announcing the beta to users:
 
 **Environment**
 - [ ] `YOUTUBE_API_KEY` is set, the YouTube Data API v3 is enabled in Google Cloud Console, and the key is restricted by **IP address** (not HTTP referrer)
+- [ ] `INSTAGRAM_ACCESS_TOKEN` is set (optional), then `php artisan config:cache` and `php artisan instagram:check` report the account and recent posts
 - [ ] `REVERB_APP_KEY` / `REVERB_APP_SECRET` / `REVERB_APP_ID` are consistent between `.env` and the Nginx config
 - [ ] `VITE_REVERB_*` variables were set **before** running `npm run build` (they are baked into the JS bundle at build time)
 

@@ -6,9 +6,10 @@ import AppButton from '@/Components/UI/AppButton.vue'
 import EventCard from '@/Components/Cards/EventCard.vue'
 import SermonCard from '@/Components/Cards/SermonCard.vue'
 import AnnouncementCard from '@/Components/Cards/AnnouncementCard.vue'
+import InstagramGallery from '@/Components/Public/InstagramGallery.vue'
 import { useChurch } from '@/composables/useChurch'
-import type { Event, Sermon, Announcement, Stat, ServiceTime, Testimonial, MinistryHighlight } from '@/types'
-import { ArrowRight, Play, Pause, Calendar } from 'lucide-vue-next'
+import type { Event, Sermon, Announcement, Stat, ServiceTime, Testimonial, MinistryHighlight, InstagramPost } from '@/types'
+import { ArrowRight, Play, Pause, Calendar, Instagram } from 'lucide-vue-next'
 import { computed, ref, onMounted, nextTick } from 'vue'
 
 const props = defineProps<{
@@ -36,7 +37,9 @@ const props = defineProps<{
         testimonials:  boolean
         announcements: boolean
         livestream:    boolean
+        instagram:     boolean
     }
+    instagramPosts:      InstagramPost[]
 }>()
 
 const { church } = useChurch()
@@ -363,6 +366,26 @@ const heroHasMedia = computed(() => !!props.heroImage || videoAllowed.value)
                     :class="`reveal-delay-${i + 1}`"
                 />
             </div>
+        </SectionWrapper>
+
+        <!--
+            ── Instagram ───────────────────────────────────────────────────────
+            The six newest posts, pulled automatically from the church's
+            Instagram. Absent entirely — no empty frame — when there is nothing
+            cached yet, Instagram is not connected, or the section is switched
+            off in Settings → Homepage.
+        -->
+        <SectionWrapper v-if="instagramPosts.length > 0 && sectionVisibility.instagram" bg="white" size="sm">
+            <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+                <div>
+                    <p class="text-sm font-semibold tracking-widest uppercase text-brand-500 mb-1">Instagram</p>
+                    <h2 class="text-2xl font-display text-neutral-900">Follow along</h2>
+                </div>
+                <AppButton v-if="church.socials?.instagram" :href="church.socials.instagram" external variant="ghost" size="sm">
+                    <Instagram class="w-3.5 h-3.5" aria-hidden="true" /> Follow on Instagram
+                </AppButton>
+            </div>
+            <InstagramGallery :posts="instagramPosts" variant="strip" :limit="6" />
         </SectionWrapper>
 
         <!-- ── Livestream CTA ─────────────────────────────────────────────────── -->

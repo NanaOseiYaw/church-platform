@@ -23,6 +23,7 @@ interface SectionVisibility {
     testimonials:  boolean
     announcements: boolean
     livestream:    boolean
+    instagram:     boolean
 }
 
 interface Settings {
@@ -376,7 +377,7 @@ function removeHeroVideo() {
                 </div>
                 <div class="p-5 space-y-3">
                     <div
-                        v-for="section in (['events', 'ministry', 'sermons', 'testimonials', 'announcements', 'livestream'] as const)"
+                        v-for="section in (['events', 'ministry', 'sermons', 'testimonials', 'announcements', 'livestream', 'instagram'] as const)"
                         :key="section"
                         class="flex items-center justify-between"
                     >
@@ -384,6 +385,7 @@ function removeHeroVideo() {
                         <button
                             type="button"
                             role="switch"
+                            :aria-label="`Show the ${section} section`"
                             :aria-checked="form.section_visibility[section]"
                             @click="toggleSection(section)"
                             :class="[
